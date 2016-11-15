@@ -50,9 +50,9 @@ public class AlbumsPresenter extends MvpPresenter<AlbumsView> {
                 })
                 .subscribe(new Consumer<List<Album>>() {
                     @Override
-                    public void accept(List<Album> albums) throws Exception {
+                    public void accept(List<Album> albumList) throws Exception {
                         getViewState().hideProgress();
-                        getViewState().showAlbums(albums);
+                        getViewState().showAlbums(albumList);
                     }
                 });
     }

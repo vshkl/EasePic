@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,10 +17,10 @@ import io.reactivex.ObservableOnSubscribe;
 
 public class LocalRepository implements Repository {
 
-    private Context context;
+    private WeakReference<Context> context;
 
     public LocalRepository(Context context) {
-        this.context = context;
+        this.context = new WeakReference<>(context);
     }
 
     @Override
@@ -35,8 +36,8 @@ public class LocalRepository implements Repository {
             @Override
             public void subscribe(ObservableEmitter<List<Album>> emitter) throws Exception {
                 List<Album> albumList = new ArrayList<>();
-                albumList.addAll(getAlbumsFromInternalStorage(context, projection, sortOrder));
-                albumList.addAll(getAlbumsFromExternalStorage(context, projection, sortOrder));
+                albumList.addAll(getAlbumsFromInternalStorage(context.get(), projection, sortOrder));
+                albumList.addAll(getAlbumsFromExternalStorage(context.get(), projection, sortOrder));
                 emitter.onNext(albumList);
             }
         });
@@ -58,7 +59,7 @@ public class LocalRepository implements Repository {
             public void subscribe(ObservableEmitter<List<Picture>> emitter) throws Exception {
                 List<Picture> pictureList = new ArrayList<>();
                 pictureList.addAll(getPicturesFromStorage(
-                        context, storageType, projection, selectionClause, selectionArgs, sortOrder));
+                        context.get(), storageType, projection, selectionClause, selectionArgs, sortOrder));
                 emitter.onNext(pictureList);
             }
         });
