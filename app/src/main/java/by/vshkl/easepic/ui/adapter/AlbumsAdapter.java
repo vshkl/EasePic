@@ -27,7 +27,9 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.LibraryVie
 
     @Override
     public void onBindViewHolder(LibraryViewHolder holder, int position) {
-        holder.tvName.setText(albumList.get(position).getBucketName());
+        Album album = albumList.get(position);
+
+        holder.tvName.setText(album.getBucketName());
     }
 
     @Override

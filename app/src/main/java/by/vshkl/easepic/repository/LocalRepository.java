@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import by.vshkl.easepic.mvp.model.Album;
@@ -24,9 +25,11 @@ public class LocalRepository implements Repository {
     @Override
     public Observable<List<Album>> getAlbums() {
         final String[] projection = {
-                MediaStore.Images.ImageColumns.BUCKET_ID,
-                MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME};
-        final String sortOrder = MediaStore.Images.Media.BUCKET_ID;
+                MediaStore.Images.Media.DATE_MODIFIED,
+                MediaStore.Images.Media.BUCKET_ID,
+                MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+                MediaStore.Images.Media.DATA};
+        final String sortOrder = MediaStore.Images.Media.DATE_MODIFIED;
 
         return Observable.create(new ObservableOnSubscribe<List<Album>>() {
             @Override
@@ -82,6 +85,7 @@ public class LocalRepository implements Repository {
             cursor.close();
         }
 
+        Collections.reverse(albumList);
         return albumList;
     }
 }

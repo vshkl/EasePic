@@ -4,6 +4,7 @@ public class Album {
 
     private String bucketId;
     private String bucketName;
+    private String bucketThumbnail;
 
     public Album() {
     }
@@ -22,6 +23,14 @@ public class Album {
 
     public void setBucketName(String bucketName) {
         this.bucketName = bucketName;
+    }
+
+    public String getBucketThumbnail() {
+        return bucketThumbnail;
+    }
+
+    public void setBucketThumbnail(String bucketThumbnail) {
+        this.bucketThumbnail = bucketThumbnail;
     }
 
     @Override
