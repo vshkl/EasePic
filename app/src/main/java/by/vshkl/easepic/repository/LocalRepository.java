@@ -5,13 +5,11 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import by.vshkl.easepic.mvp.model.Album;
+import by.vshkl.easepic.mvp.model.Picture;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -31,7 +29,7 @@ public class LocalRepository implements Repository {
                 MediaStore.Images.Media.BUCKET_ID,
                 MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
                 MediaStore.Images.Media.DATA};
-        final String sortOrder = MediaStore.Images.Media.DATE_MODIFIED;
+        final String sortOrder = MediaStore.Images.Media.DATE_MODIFIED + " DESC";
 
         return Observable.create(new ObservableOnSubscribe<List<Album>>() {
             @Override
@@ -44,21 +42,43 @@ public class LocalRepository implements Repository {
         });
     }
 
-    //------------------------------------------------------------------------------------------------------------------
+    @Override
+    public Observable<List<Picture>> getPictures(final Album.StorageType storageType, String albumId) {
+        final String[] projection = {
+                MediaStore.Images.Media._ID,
+                MediaStore.Images.Media.DISPLAY_NAME,
+                MediaStore.Images.Media.DATE_MODIFIED,
+                MediaStore.Images.Media.DATA};
+        final String selectionClause = MediaStore.Images.Media.BUCKET_ID + " = ?";
+        final String[] selectionArgs = {albumId};
+        final String sortOrder = MediaStore.Images.Media.DATE_MODIFIED + " DESC";
 
-    private List<Album> getAlbumsFromInternalStorage(Context contexts, String[] projection, String sortOrder) {
-        return getAlbumsFromStorage(contexts, MediaStore.Images.Media.INTERNAL_CONTENT_URI, projection, sortOrder);
+        return Observable.create(new ObservableOnSubscribe<List<Picture>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<Picture>> emitter) throws Exception {
+                List<Picture> pictureList = new ArrayList<>();
+                pictureList.addAll(getPicturesFromStorage(
+                        context, storageType, projection, selectionClause, selectionArgs, sortOrder));
+                emitter.onNext(pictureList);
+            }
+        });
     }
 
-    private List<Album> getAlbumsFromExternalStorage(Context contexts, String[] projection, String selectionClause) {
+    //------------------------------------------------------------------------------------------------------------------
+
+    private List<Album> getAlbumsFromInternalStorage(Context context, String[] projection, String sortOrder) {
+        return getAlbumsFromStorage(context, MediaStore.Images.Media.INTERNAL_CONTENT_URI, projection, sortOrder);
+    }
+
+    private List<Album> getAlbumsFromExternalStorage(Context context, String[] projection, String selectionClause) {
         if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
-            return getAlbumsFromStorage(contexts, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, selectionClause);
+            return getAlbumsFromStorage(context, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, selectionClause);
         }
         return new ArrayList<>();
     }
 
-    private List<Album> getAlbumsFromStorage(Context contexts, Uri storageUri, String[] projection, String sortOrder) {
-        Cursor cursor = contexts.getContentResolver().query(
+    private List<Album> getAlbumsFromStorage(Context context, Uri storageUri, String[] projection, String sortOrder) {
+        Cursor cursor = context.getContentResolver().query(
                 storageUri,
                 projection,
                 null,
@@ -75,26 +95,62 @@ public class LocalRepository implements Repository {
 
             cursor.moveToFirst();
 
-            for (int i = 0; i < cursor.getCount(); i++) {
+            while (cursor.moveToNext()) {
                 Album album = new Album();
                 album.setBucketId(cursor.getString(indexBucketId));
                 album.setBucketName(cursor.getString(indexBucketName));
-                album.setBucketThumbnail(cursor.getString(indexBucketData));
                 if (storageUri.equals(MediaStore.Images.Media.INTERNAL_CONTENT_URI)) {
                     album.setBucketStorageType(Album.StorageType.INTERNAL);
                 } else {
                     album.setBucketStorageType(Album.StorageType.EXTERNAL);
                 }
                 if (!albumList.contains(album)) {
+                    album.setBucketThumbnail(cursor.getString(indexBucketData));
                     albumList.add(album);
                 }
-                cursor.moveToPosition(i);
             }
 
             cursor.close();
         }
 
-        Collections.reverse(albumList);
         return albumList;
+    }
+
+    private List<Picture> getPicturesFromStorage(Context context, Album.StorageType storageType, String[] projection,
+                                                 String selectionClause, String[] selectionArgs, String sortOrder) {
+        Uri storageUri = MediaStore.Images.Media.INTERNAL_CONTENT_URI;
+        if (storageType.equals(Album.StorageType.EXTERNAL)) {
+            if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
+                storageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+            }
+        }
+
+        Cursor cursor = context.getContentResolver().query(
+                storageUri,
+                projection,
+                selectionClause,
+                selectionArgs,
+                sortOrder
+        );
+
+        List<Picture> pictureList = new ArrayList<>();
+
+        if (cursor != null) {
+            int indexPictureId = cursor.getColumnIndex(MediaStore.Images.Media._ID);
+            int indexPictureName = cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME);
+            int indexPictureData = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
+
+            while (cursor.moveToNext()) {
+                Picture picture = new Picture();
+                picture.setId(cursor.getString(indexPictureId));
+                picture.setName(cursor.getString(indexPictureName));
+                picture.setPath(cursor.getString(indexPictureData));
+                pictureList.add(picture);
+            }
+
+            cursor.close();
+        }
+
+        return pictureList;
     }
 }
