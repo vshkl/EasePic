@@ -13,7 +13,7 @@ public class EasePicGlideModule implements com.bumptech.glide.module.GlideModule
     @Override
     public void applyOptions(Context context, GlideBuilder builder) {
         builder.setDiskCache(new InternalCacheDiskCacheFactory(context, 25 * 1024 * 1024));
-        builder.setBitmapPool(new LruBitmapPool(10 * 1024 * 1024));
+        builder.setBitmapPool(new LruBitmapPool(25 * 1024 * 1024));
         builder.setDecodeFormat(DecodeFormat.PREFER_RGB_565);
     }
 
