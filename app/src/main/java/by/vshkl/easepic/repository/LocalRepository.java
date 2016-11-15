@@ -69,6 +69,7 @@ public class LocalRepository implements Repository {
         if (cursor != null) {
             int indexBucketId = cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID);
             int indexBucketName = cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+            int indexBucketData = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
 
             cursor.moveToFirst();
 
@@ -76,6 +77,7 @@ public class LocalRepository implements Repository {
                 Album album = new Album();
                 album.setBucketId(cursor.getString(indexBucketId));
                 album.setBucketName(cursor.getString(indexBucketName));
+                album.setBucketThumbnail(cursor.getString(indexBucketData));
                 if (!albumList.contains(album)) {
                     albumList.add(album);
                 }
@@ -84,6 +86,16 @@ public class LocalRepository implements Repository {
 
             cursor.close();
         }
+
+
+
+
+
+
+
+
+
+
 
         Collections.reverse(albumList);
         return albumList;
