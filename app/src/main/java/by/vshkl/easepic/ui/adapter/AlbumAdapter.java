@@ -6,10 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.facebook.common.util.UriUtil;
-import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +26,11 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.PictureViewH
 
     private List<Picture> pictureList = new ArrayList<>();
     private OnPictureClickListener onPictureClickListener;
+    private int itemDimension;
+
+    public AlbumAdapter(int itemDimension) {
+        this.itemDimension = itemDimension;
+    }
 
     @Override
     public PictureViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -38,12 +42,14 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.PictureViewH
     public void onBindViewHolder(PictureViewHolder holder, int position) {
         final int currentPosition = position;
 
-        Picasso.with(holder.itemView.getContext())
-                .load(Uri.fromFile(new File(pictureList.get(position).getPath())))
-                .resize(240, 240)
-                .onlyScaleDown()
+        Glide.with(holder.itemView.getContext())
+                .load(pictureList.get(position).getPath())
+                .placeholder(R.drawable.ic_image_placeholder)
+                .override(itemDimension, itemDimension)
                 .centerCrop()
+                .crossFade()
                 .into(holder.ivThumbnail);
+
         holder.ivThumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

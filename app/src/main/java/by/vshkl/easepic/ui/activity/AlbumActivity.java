@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -117,21 +118,28 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
     }
 
     private void initializeRecyclerView() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int itemDimension;
+
         GridLayoutManager gridLayoutManager;
         switch (getResources().getConfiguration().orientation) {
             case Configuration.ORIENTATION_PORTRAIT:
                 gridLayoutManager = new GridLayoutManager(AlbumActivity.this, 3);
+                itemDimension = displayMetrics.widthPixels / 3;
                 break;
             case Configuration.ORIENTATION_LANDSCAPE:
                 gridLayoutManager = new GridLayoutManager(AlbumActivity.this, 6);
+                itemDimension = displayMetrics.widthPixels / 6;
                 break;
             default:
                 gridLayoutManager = new GridLayoutManager(AlbumActivity.this, 3);
+                itemDimension = displayMetrics.widthPixels / 3;
                 break;
         }
         rvGallery.setLayoutManager(gridLayoutManager);
 
-        albumAdapter = new AlbumAdapter();
+        albumAdapter = new AlbumAdapter(itemDimension);
         albumAdapter.setOnPictureClickListener(AlbumActivity.this);
         rvGallery.setAdapter(albumAdapter);
     }

@@ -15,3 +15,8 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-keepnames class by.vshkl.easepic.EasePicGlideModule
+
+# for DexGuard only
+-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
