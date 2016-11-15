@@ -19,19 +19,24 @@ import butterknife.ButterKnife;
 import by.vshkl.easepic.R;
 import by.vshkl.easepic.mvp.model.Album;
 
-public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.LibraryViewHolder> {
+public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsViewHolder> {
+
+    public interface OnAlbumClickListener {
+        void onAlbumClicked(Album.StorageType storageType, String albumId);
+    }
 
     private List<Album> albumList = new ArrayList<>();
+    private OnAlbumClickListener onAlbumClickListener;
 
     @Override
-    public LibraryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AlbumsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_album, parent, false);
-        return new LibraryViewHolder(itemView);
+        return new AlbumsViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(LibraryViewHolder holder, int position) {
-        Album album = albumList.get(position);
+    public void onBindViewHolder(AlbumsViewHolder holder, int position) {
+        final Album album = albumList.get(position);
 
         holder.tvName.setText(album.getBucketName());
 
@@ -41,6 +46,14 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.LibraryVie
                 .onlyScaleDown()
                 .centerCrop()
                 .into(holder.ivThumbnail);
+        holder.ivThumbnail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (onAlbumClickListener != null) {
+                    onAlbumClickListener.onAlbumClicked(album.getBucketStorageType(), album.getBucketId());
+                }
+            }
+        });
     }
 
     @Override
@@ -52,16 +65,20 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.LibraryVie
         this.albumList = albumList;
     }
 
-    class LibraryViewHolder extends RecyclerView.ViewHolder {
+    public void setOnAlbumClickListener(OnAlbumClickListener onAlbumClickListener) {
+        this.onAlbumClickListener = onAlbumClickListener;
+    }
+
+    class AlbumsViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.iv_thumbnail)
         ImageView ivThumbnail;
         @BindView(R.id.tv_name)
         TextView tvName;
 
-        LibraryViewHolder(View itemView) {
+        AlbumsViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(LibraryViewHolder.this, itemView);
+            ButterKnife.bind(AlbumsViewHolder.this, itemView);
         }
     }
 }

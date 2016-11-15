@@ -1,5 +1,6 @@
 package by.vshkl.easepic.ui.activity;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -21,15 +22,16 @@ import by.vshkl.easepic.mvp.model.Album;
 import by.vshkl.easepic.mvp.presenter.AlbumsPresenter;
 import by.vshkl.easepic.mvp.view.AlbumsView;
 import by.vshkl.easepic.ui.adapter.AlbumsAdapter;
+import by.vshkl.easepic.ui.adapter.AlbumsAdapter.OnAlbumClickListener;
 
-public class AlbumsActivity extends MvpAppCompatActivity implements AlbumsView {
+public class AlbumsActivity extends MvpAppCompatActivity implements AlbumsView, OnAlbumClickListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.pb_loading)
     ProgressBar pbLoading;
-    @BindView(R.id.rv_gallery_folders)
-    RecyclerView rvGalleryFolders;
+    @BindView(R.id.rv_gallery)
+    RecyclerView rvGallery;
 
     @InjectPresenter
     AlbumsPresenter albumsPresenter;
@@ -78,14 +80,24 @@ public class AlbumsActivity extends MvpAppCompatActivity implements AlbumsView {
 
     @Override
     public void showProgress() {
-        rvGalleryFolders.setVisibility(View.GONE);
+        rvGallery.setVisibility(View.GONE);
         pbLoading.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgress() {
         pbLoading.setVisibility(View.GONE);
-        rvGalleryFolders.setVisibility(View.VISIBLE);
+        rvGallery.setVisibility(View.VISIBLE);
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void onAlbumClicked(Album.StorageType storageType, String albumId) {
+        Intent intent = new Intent(AlbumsActivity.this, AlbumActivity.class);
+        intent.putExtra(AlbumActivity.EXTRA_STORAGE_TYPE, storageType);
+        intent.putExtra(AlbumActivity.EXTRA_ALBUM_ID, albumId);
+        startActivity(intent);
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -103,9 +115,10 @@ public class AlbumsActivity extends MvpAppCompatActivity implements AlbumsView {
                 gridLayoutManager = new GridLayoutManager(AlbumsActivity.this, 2);
                 break;
         }
-        rvGalleryFolders.setLayoutManager(gridLayoutManager);
+        rvGallery.setLayoutManager(gridLayoutManager);
 
         albumsAdapter = new AlbumsAdapter();
-        rvGalleryFolders.setAdapter(albumsAdapter);
+        albumsAdapter.setOnAlbumClickListener(AlbumsActivity.this);
+        rvGallery.setAdapter(albumsAdapter);
     }
 }
