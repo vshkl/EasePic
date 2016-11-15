@@ -2,9 +2,15 @@ package by.vshkl.easepic.mvp.model;
 
 public class Album {
 
+    public enum StorageType {
+        INTERNAL,
+        EXTERNAL
+    }
+
     private String bucketId;
     private String bucketName;
     private String bucketThumbnail;
+    private StorageType bucketStorageType;
 
     public Album() {
     }
@@ -31,6 +37,14 @@ public class Album {
 
     public void setBucketThumbnail(String bucketThumbnail) {
         this.bucketThumbnail = bucketThumbnail;
+    }
+
+    public StorageType getBucketStorageType() {
+        return bucketStorageType;
+    }
+
+    public void setBucketStorageType(StorageType bucketStorageType) {
+        this.bucketStorageType = bucketStorageType;
     }
 
     @Override

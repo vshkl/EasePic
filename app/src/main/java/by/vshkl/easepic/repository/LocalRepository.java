@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,8 +37,8 @@ public class LocalRepository implements Repository {
             @Override
             public void subscribe(ObservableEmitter<List<Album>> emitter) throws Exception {
                 List<Album> albumList = new ArrayList<>();
-                albumList.addAll(getFromInternalStorage(context, projection, sortOrder));
-                albumList.addAll(getFromExternalStorage(context, projection, sortOrder));
+                albumList.addAll(getAlbumsFromInternalStorage(context, projection, sortOrder));
+                albumList.addAll(getAlbumsFromExternalStorage(context, projection, sortOrder));
                 emitter.onNext(albumList);
             }
         });
@@ -44,18 +46,18 @@ public class LocalRepository implements Repository {
 
     //------------------------------------------------------------------------------------------------------------------
 
-    private List<Album> getFromInternalStorage(Context contexts, String[] projection, String sortOrder) {
-        return getFromStorage(contexts, MediaStore.Images.Media.INTERNAL_CONTENT_URI, projection, sortOrder);
+    private List<Album> getAlbumsFromInternalStorage(Context contexts, String[] projection, String sortOrder) {
+        return getAlbumsFromStorage(contexts, MediaStore.Images.Media.INTERNAL_CONTENT_URI, projection, sortOrder);
     }
 
-    private List<Album> getFromExternalStorage(Context contexts, String[] projection, String selectionClause) {
+    private List<Album> getAlbumsFromExternalStorage(Context contexts, String[] projection, String selectionClause) {
         if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
-            return getFromStorage(contexts, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, selectionClause);
+            return getAlbumsFromStorage(contexts, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, selectionClause);
         }
         return new ArrayList<>();
     }
 
-    private List<Album> getFromStorage(Context contexts, Uri storageUri, String[] projection, String sortOrder) {
+    private List<Album> getAlbumsFromStorage(Context contexts, Uri storageUri, String[] projection, String sortOrder) {
         Cursor cursor = contexts.getContentResolver().query(
                 storageUri,
                 projection,
@@ -78,6 +80,11 @@ public class LocalRepository implements Repository {
                 album.setBucketId(cursor.getString(indexBucketId));
                 album.setBucketName(cursor.getString(indexBucketName));
                 album.setBucketThumbnail(cursor.getString(indexBucketData));
+                if (storageUri.equals(MediaStore.Images.Media.INTERNAL_CONTENT_URI)) {
+                    album.setBucketStorageType(Album.StorageType.INTERNAL);
+                } else {
+                    album.setBucketStorageType(Album.StorageType.EXTERNAL);
+                }
                 if (!albumList.contains(album)) {
                     albumList.add(album);
                 }
@@ -86,16 +93,6 @@ public class LocalRepository implements Repository {
 
             cursor.close();
         }
-
-
-
-
-
-
-
-
-
-
 
         Collections.reverse(albumList);
         return albumList;

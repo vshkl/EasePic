@@ -39,7 +39,7 @@ public class AlbumsActivity extends MvpAppCompatActivity implements AlbumsView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_library);
+        setContentView(R.layout.activity_gallery);
         ButterKnife.bind(AlbumsActivity.this);
         setSupportActionBar(toolbar);
 

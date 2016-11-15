@@ -25,7 +25,7 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.LibraryVie
 
     @Override
     public LibraryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_folder, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_album, parent, false);
         return new LibraryViewHolder(itemView);
     }
 
