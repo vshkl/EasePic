@@ -44,7 +44,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.PictureViewH
 
         Glide.with(holder.itemView.getContext())
                 .load(pictureList.get(position).getPath())
-                .placeholder(R.drawable.ic_image_placeholder)
+                .placeholder(R.color.colorSemiTransparent)
                 .override(itemDimension, itemDimension)
                 .centerCrop()
                 .crossFade()
