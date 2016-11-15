@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.facebook.common.util.UriUtil;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -20,7 +21,12 @@ import by.vshkl.easepic.ui.view.SquareImageView;
 
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.PictureViewHolder> {
 
+    public interface OnPictureClickListener {
+        void onPictureClicked(int position);
+    }
+
     private List<Picture> pictureList = new ArrayList<>();
+    private OnPictureClickListener onPictureClickListener;
 
     @Override
     public PictureViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -30,12 +36,22 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.PictureViewH
 
     @Override
     public void onBindViewHolder(PictureViewHolder holder, int position) {
+        final int currentPosition = position;
+
         Picasso.with(holder.itemView.getContext())
                 .load(Uri.fromFile(new File(pictureList.get(position).getPath())))
                 .resize(240, 240)
                 .onlyScaleDown()
                 .centerCrop()
                 .into(holder.ivThumbnail);
+        holder.ivThumbnail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (onPictureClickListener != null) {
+                    onPictureClickListener.onPictureClicked(currentPosition);
+                }
+            }
+        });
     }
 
     @Override
@@ -45,6 +61,22 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.PictureViewH
 
     public void setPictureList(List<Picture> pictureList) {
         this.pictureList = pictureList;
+    }
+
+    public void setOnPictureClickListener(OnPictureClickListener onPictureClickListener) {
+        this.onPictureClickListener = onPictureClickListener;
+    }
+
+    public List<String> getPicturesPaths() {
+        List<String> picturesPaths = new ArrayList<>();
+        for (Picture picture : pictureList) {
+            Uri uri = new Uri.Builder()
+                    .scheme(UriUtil.LOCAL_FILE_SCHEME)
+                    .path(picture.getPath())
+                    .build();
+            picturesPaths.add(uri.toString());
+        }
+        return picturesPaths;
     }
 
     class PictureViewHolder extends RecyclerView.ViewHolder {

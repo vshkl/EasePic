@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.util.List;
 
@@ -23,8 +24,9 @@ import by.vshkl.easepic.mvp.model.Picture;
 import by.vshkl.easepic.mvp.presenter.AlbumPresenter;
 import by.vshkl.easepic.mvp.view.AlbumView;
 import by.vshkl.easepic.ui.adapter.AlbumAdapter;
+import by.vshkl.easepic.ui.adapter.AlbumAdapter.OnPictureClickListener;
 
-public class AlbumActivity extends MvpAppCompatActivity implements AlbumView {
+public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, OnPictureClickListener {
 
     public static final String EXTRA_STORAGE_TYPE = "EXTRA_STORAGE_TYPE";
     public static final String EXTRA_ALBUM_ID = "EXTRA_ALBUM_ID";
@@ -100,6 +102,15 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView {
 
     //------------------------------------------------------------------------------------------------------------------
 
+    @Override
+    public void onPictureClicked(int position) {
+        new ImageViewer.Builder(AlbumActivity.this, albumAdapter.getPicturesPaths())
+                .setStartPosition(position)
+                .show();
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
     private void initializePresenter(Album.StorageType storageType, String albumId) {
         albumPresenter.setStorageType(storageType);
         albumPresenter.setAlbumId(albumId);
@@ -121,6 +132,7 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView {
         rvGallery.setLayoutManager(gridLayoutManager);
 
         albumAdapter = new AlbumAdapter();
+        albumAdapter.setOnPictureClickListener(AlbumActivity.this);
         rvGallery.setAdapter(albumAdapter);
     }
 }
