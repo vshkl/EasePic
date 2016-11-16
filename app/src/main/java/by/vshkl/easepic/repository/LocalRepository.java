@@ -7,6 +7,7 @@ import android.provider.MediaStore;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import by.vshkl.easepic.mvp.model.Album;
@@ -87,9 +88,11 @@ public class LocalRepository implements Repository {
                 sortOrder
         );
 
-        List<Album> albumList = new ArrayList<>();
+        LinkedHashSet<Album> albumLinkedHashSet = null;
 
         if (cursor != null) {
+            albumLinkedHashSet = new LinkedHashSet<>(cursor.getCount());
+
             int indexBucketId = cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID);
             int indexBucketName = cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
             int indexBucketData = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
@@ -105,16 +108,14 @@ public class LocalRepository implements Repository {
                 } else {
                     album.setBucketStorageType(Album.StorageType.EXTERNAL);
                 }
-                if (!albumList.contains(album)) {
-                    album.setBucketThumbnail(cursor.getString(indexBucketData));
-                    albumList.add(album);
-                }
+                album.setBucketThumbnail(cursor.getString(indexBucketData));
+                albumLinkedHashSet.add(album);
             }
 
             cursor.close();
         }
 
-        return albumList;
+        return new ArrayList<>(albumLinkedHashSet);
     }
 
     private List<Picture> getPicturesFromStorage(Context context, Album.StorageType storageType, String[] projection,
@@ -134,9 +135,11 @@ public class LocalRepository implements Repository {
                 sortOrder
         );
 
-        List<Picture> pictureList = new ArrayList<>();
+        List<Picture> pictureList = null;
 
         if (cursor != null) {
+            pictureList = new ArrayList<>(cursor.getCount());
+
             int indexPictureId = cursor.getColumnIndex(MediaStore.Images.Media._ID);
             int indexPictureName = cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME);
             int indexPictureData = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
