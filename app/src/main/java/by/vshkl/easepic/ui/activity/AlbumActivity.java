@@ -7,6 +7,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -51,6 +52,7 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
         setContentView(R.layout.activity_gallery);
         ButterKnife.bind(AlbumActivity.this);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
         initializePresenter(
@@ -72,6 +74,16 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
         super.onStop();
         removeListeners();
         albumPresenter.onStop();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     //------------------------------------------------------------------------------------------------------------------
