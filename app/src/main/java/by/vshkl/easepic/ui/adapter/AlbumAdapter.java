@@ -1,5 +1,6 @@
 package by.vshkl.easepic.ui.adapter;
 
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,15 +72,15 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.PictureViewH
         this.onPictureClickListener = onPictureClickListener;
     }
 
-    public List<String> getUriList() {
-        List<String> stringList = new ArrayList<>();
+    public List<Uri> getUriList() {
+        List<Uri> stringList = new ArrayList<>();
 
         for (Picture picture : pictureList) {
-//            Uri uri = new Uri.Builder()
-//                    .scheme("file")
-//                    .path(picture.getPath())
-//                    .build();
-            stringList.add(picture.getPath());
+            Uri uri = new Uri.Builder()
+                    .scheme("file")
+                    .path(picture.getPath())
+                    .build();
+            stringList.add(uri);
         }
 
         return stringList;

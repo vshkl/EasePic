@@ -2,6 +2,7 @@ package by.vshkl.easepic.ui.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.ViewPager;
@@ -124,7 +125,7 @@ public class ImageViewerView extends RelativeLayout implements OnDismissListener
 
     //------------------------------------------------------------------------------------------------------------------
 
-    public void setUris(List<String> uriList, int startPosition) {
+    public void setUris(List<Uri> uriList, int startPosition) {
         adapter = new ImageViewerAdapter(getContext(), uriList);
         vpPager.setAdapter(adapter);
         vpPager.setCurrentItem(startPosition);
@@ -171,7 +172,7 @@ public class ImageViewerView extends RelativeLayout implements OnDismissListener
         return adapter.isScaled();
     }
 
-    public String getUri() {
+    public Uri getUri() {
         return adapter.getUri(vpPager.getCurrentItem());
     }
 

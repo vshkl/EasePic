@@ -3,14 +3,13 @@ package by.vshkl.easepic.ui.view;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.annotation.ColorInt;
 import android.support.annotation.StyleRes;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import by.vshkl.easepic.ui.listener.OnDismissListener;
@@ -54,18 +53,18 @@ public class ImageViewer implements OnDismissListener, DialogInterface.OnKeyList
     //------------------------------------------------------------------------------------------------------------------
 
     public void show() {
-        if (!builder.urls.isEmpty()) {
+        if (!builder.uris.isEmpty()) {
             dialog.show();
         }
     }
 
-    public String getUri() {
+    public Uri getUri() {
         return viewer.getUri();
     }
 
     private void createDialog() {
         viewer = new ImageViewerView(builder.context);
-        viewer.setUris(builder.urls, builder.startPosition);
+        viewer.setUris(builder.uris, builder.startPosition);
         viewer.setOnDismissListener(this);
         viewer.setBackgroundColor(builder.backgroundColor);
         viewer.setBackgroundColor(builder.backgroundColor);
@@ -97,7 +96,7 @@ public class ImageViewer implements OnDismissListener, DialogInterface.OnKeyList
     public static class Builder {
 
         private Context context;
-        private List<String> urls;
+        private List<Uri> uris;
         private
         @ColorInt
         int backgroundColor = Color.BLACK;
@@ -106,13 +105,9 @@ public class ImageViewer implements OnDismissListener, DialogInterface.OnKeyList
         private OnDismissListener onDismissListener;
         private boolean shouldStatusBarHide = true;
 
-        public Builder(Context context, String[] urls) {
-            this(context, new ArrayList<>(Arrays.asList(urls)));
-        }
-
-        public Builder(Context context, List<String> urls) {
+        public Builder(Context context, List<Uri> uris) {
             this.context = context;
-            this.urls = urls;
+            this.uris = uris;
         }
 
         public Builder setBackgroundColor(@ColorInt int color) {

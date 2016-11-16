@@ -14,10 +14,10 @@ import java.util.List;
 public class ImageViewerAdapter extends PagerAdapter {
 
     private WeakReference<Context> context;
-    private List<String> uriList;
+    private List<Uri> uriList;
     private WeakReference<BigImageView> imageView;
 
-    public ImageViewerAdapter(Context context, List<String> uriList) {
+    public ImageViewerAdapter(Context context, List<Uri> uriList) {
         this.context = new WeakReference<>(context);
         this.uriList = uriList;
     }
@@ -63,13 +63,13 @@ public class ImageViewerAdapter extends PagerAdapter {
         imageView.get().setScaleY(0.0F);
     }
 
-    public String getUri(int position) {
+    public Uri getUri(int position) {
         return uriList.get(position);
     }
 
-    private WeakReference<BigImageView> getImage(String uri) {
-        WeakReference<BigImageView> bigImageVIew = new WeakReference<BigImageView>(new BigImageView(context.get()));
-        bigImageVIew.get().showImage(new Uri.Builder().scheme("file").path(uri).build());
+    private WeakReference<BigImageView> getImage(Uri uri) {
+        WeakReference<BigImageView> bigImageVIew = new WeakReference<>(new BigImageView(context.get()));
+        bigImageVIew.get().showImage(uri);
         return bigImageVIew;
     }
 }
