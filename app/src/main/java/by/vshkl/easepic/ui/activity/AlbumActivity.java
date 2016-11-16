@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.util.List;
 
@@ -26,6 +25,7 @@ import by.vshkl.easepic.mvp.presenter.AlbumPresenter;
 import by.vshkl.easepic.mvp.view.AlbumView;
 import by.vshkl.easepic.ui.adapter.AlbumAdapter;
 import by.vshkl.easepic.ui.adapter.AlbumAdapter.OnPictureClickListener;
+import by.vshkl.easepic.ui.view.ImageViewer;
 
 public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, OnPictureClickListener {
 
@@ -105,7 +105,7 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
 
     @Override
     public void onPictureClicked(int position) {
-        new ImageViewer.Builder(AlbumActivity.this, albumAdapter.getPicturesPaths())
+        new ImageViewer.Builder(this, albumAdapter.getUriList())
                 .setStartPosition(position)
                 .show();
     }

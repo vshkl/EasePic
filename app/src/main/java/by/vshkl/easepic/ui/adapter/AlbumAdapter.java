@@ -1,13 +1,11 @@
 package by.vshkl.easepic.ui.adapter;
 
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
-import com.facebook.common.util.UriUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,16 +71,22 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.PictureViewH
         this.onPictureClickListener = onPictureClickListener;
     }
 
-    public List<String> getPicturesPaths() {
-        List<String> picturesPaths = new ArrayList<>();
+    public List<String> getUriList() {
+        List<String> stringList = new ArrayList<>();
+
         for (Picture picture : pictureList) {
-            Uri uri = new Uri.Builder()
-                    .scheme(UriUtil.LOCAL_FILE_SCHEME)
-                    .path(picture.getPath())
-                    .build();
-            picturesPaths.add(uri.toString());
+//            Uri uri = new Uri.Builder()
+//                    .scheme("file")
+//                    .path(picture.getPath())
+//                    .build();
+            stringList.add(picture.getPath());
         }
-        return picturesPaths;
+
+        return stringList;
+    }
+
+    public List<Picture> getPictureList() {
+        return pictureList;
     }
 
     class PictureViewHolder extends RecyclerView.ViewHolder {
