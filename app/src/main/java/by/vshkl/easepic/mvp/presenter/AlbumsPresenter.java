@@ -11,6 +11,7 @@ import by.vshkl.easepic.mvp.model.Album;
 import by.vshkl.easepic.mvp.view.AlbumsView;
 import by.vshkl.easepic.repository.LocalRepository;
 import by.vshkl.easepic.repository.Repository;
+import by.vshkl.easepic.ui.utils.ErrorUtils;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -44,7 +45,7 @@ public class AlbumsPresenter extends MvpPresenter<AlbumsView> {
                     public List<Album> apply(Throwable throwable) throws Exception {
                         throwable.printStackTrace();
                         getViewState().hideProgress();
-                        getViewState().showError(throwable.getMessage());
+                        getViewState().showError(ErrorUtils.Error.ERROR_GET_ALBUMS);
                         return null;
                     }
                 })

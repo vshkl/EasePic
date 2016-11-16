@@ -5,6 +5,7 @@ import com.arellomobile.mvp.MvpView;
 import java.util.List;
 
 import by.vshkl.easepic.mvp.model.Picture;
+import by.vshkl.easepic.ui.utils.ErrorUtils;
 
 public interface AlbumView extends MvpView {
 
@@ -12,7 +13,7 @@ public interface AlbumView extends MvpView {
 
     void showMessage(String message);
 
-    void showError(String error);
+    void showError(ErrorUtils.Error error);
 
     void showProgress();
 

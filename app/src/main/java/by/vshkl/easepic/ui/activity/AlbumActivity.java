@@ -25,6 +25,7 @@ import by.vshkl.easepic.mvp.presenter.AlbumPresenter;
 import by.vshkl.easepic.mvp.view.AlbumView;
 import by.vshkl.easepic.ui.adapter.AlbumAdapter;
 import by.vshkl.easepic.ui.adapter.AlbumAdapter.OnPictureClickListener;
+import by.vshkl.easepic.ui.utils.ErrorUtils;
 import by.vshkl.easepic.ui.view.ImageViewer;
 
 public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, OnPictureClickListener {
@@ -87,8 +88,8 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
     }
 
     @Override
-    public void showError(String error) {
-        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    public void showError(ErrorUtils.Error error) {
+        Toast.makeText(this, ErrorUtils.getMessageString(AlbumActivity.this, error), Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -12,6 +12,7 @@ import by.vshkl.easepic.mvp.model.Picture;
 import by.vshkl.easepic.mvp.view.AlbumView;
 import by.vshkl.easepic.repository.LocalRepository;
 import by.vshkl.easepic.repository.Repository;
+import by.vshkl.easepic.ui.utils.ErrorUtils;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -49,15 +50,19 @@ public class AlbumPresenter extends MvpPresenter<AlbumView> {
                     public List<Picture> apply(Throwable throwable) throws Exception {
                         throwable.printStackTrace();
                         getViewState().hideProgress();
-                        getViewState().showError(throwable.getMessage());
+                        getViewState().showError(ErrorUtils.Error.ERROR_NO_PICTURES);
                         return null;
                     }
                 })
                 .subscribe(new Consumer<List<Picture>>() {
                     @Override
                     public void accept(List<Picture> pictureList) throws Exception {
-                        getViewState().hideProgress();
-                        getViewState().showPictures(pictureList);
+                        if (pictureList != null) {
+                            getViewState().hideProgress();
+                            getViewState().showPictures(pictureList);
+                        } else {
+                            getViewState().showError(ErrorUtils.Error.ERROR_NO_PICTURES);
+                        }
                     }
                 });
     }
