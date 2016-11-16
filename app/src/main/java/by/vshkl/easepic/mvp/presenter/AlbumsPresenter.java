@@ -27,7 +27,6 @@ public class AlbumsPresenter extends MvpPresenter<AlbumsView> {
     public void onStart(Context context) {
         repository = new LocalRepository(context);
         getViewState().showProgress();
-        getLibrary();
     }
 
     public void onStop() {

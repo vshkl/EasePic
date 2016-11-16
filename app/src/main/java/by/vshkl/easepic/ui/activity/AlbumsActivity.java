@@ -1,8 +1,13 @@
 package by.vshkl.easepic.ui.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -28,6 +33,10 @@ import by.vshkl.easepic.ui.utils.ErrorUtils;
 
 public class AlbumsActivity extends MvpAppCompatActivity implements AlbumsView, OnAlbumClickListener {
 
+    private static final int PERMISSION_REQUEST_READ_EXTERNAL_STORAGE = 42;
+
+    @BindView(R.id.root)
+    View rootVIew;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.pb_loading)
@@ -55,6 +64,7 @@ public class AlbumsActivity extends MvpAppCompatActivity implements AlbumsView, 
         super.onStart();
         setListeners();
         albumsPresenter.onStart(AlbumsActivity.this);
+        checkExternalStoragePermission();
     }
 
     @Override
@@ -62,6 +72,23 @@ public class AlbumsActivity extends MvpAppCompatActivity implements AlbumsView, 
         super.onStop();
         removeListeners();
         albumsPresenter.onStop();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_READ_EXTERNAL_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Snackbar.make(rootVIew, R.string.permission_read_external_storage_granted, Snackbar.LENGTH_SHORT)
+                            .show();
+                    albumsPresenter.getLibrary();
+                } else {
+                    Snackbar.make(rootVIew, R.string.permission_read_external_storage_not_granted, Snackbar.LENGTH_SHORT)
+                            .show();
+                }
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -130,6 +157,38 @@ public class AlbumsActivity extends MvpAppCompatActivity implements AlbumsView, 
 
         albumsAdapter = new AlbumsAdapter(itemDimension);
         rvGallery.setAdapter(albumsAdapter);
+    }
+
+    private void checkExternalStoragePermission() {
+        if (ActivityCompat.checkSelfPermission(AlbumsActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            checkRationaleRequiredAndRequestExternalStoragePermission();
+        } else {
+            albumsPresenter.getLibrary();
+        }
+    }
+
+    private void checkRationaleRequiredAndRequestExternalStoragePermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(
+                AlbumsActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            Snackbar.make(rootVIew, R.string.permission_read_external_storage_rationale, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            requestExternalStoragePermission();
+                        }
+                    })
+                    .show();
+        } else {
+            requestExternalStoragePermission();
+        }
+    }
+
+    private void requestExternalStoragePermission() {
+        ActivityCompat.requestPermissions(
+                AlbumsActivity.this,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                PERMISSION_REQUEST_READ_EXTERNAL_STORAGE);
     }
 
     private void setListeners() {

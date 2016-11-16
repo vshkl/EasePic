@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">EasePic</string>
+
+    <string name="permission_read_external_storage_rationale">Read external storage permission is needed to show gallery albums.</string>
+    <string name="permission_read_external_storage_granted">Read external storage permission has been granted</string>
+    <string name="permission_read_external_storage_not_granted">Read external storage permission were not granted.</string>
+
     <string name="error_no_pictures">No pictures found</string>
     <string name="error_get_albums">Failed to get albums</string>
     <string name="error_get_pictures">Failed to get pictures</string>
+
+    <string name="ok">Ok</string>
+
 </resources>
