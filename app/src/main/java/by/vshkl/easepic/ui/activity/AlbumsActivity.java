@@ -52,12 +52,14 @@ public class AlbumsActivity extends MvpAppCompatActivity implements AlbumsView, 
     @Override
     protected void onStart() {
         super.onStart();
+        setListeners();
         albumsPresenter.onStart(AlbumsActivity.this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        removeListeners();
         albumsPresenter.onStop();
     }
 
@@ -126,7 +128,14 @@ public class AlbumsActivity extends MvpAppCompatActivity implements AlbumsView, 
         rvGallery.setLayoutManager(gridLayoutManager);
 
         albumsAdapter = new AlbumsAdapter(itemDimension);
-        albumsAdapter.setOnAlbumClickListener(AlbumsActivity.this);
         rvGallery.setAdapter(albumsAdapter);
+    }
+
+    private void setListeners() {
+        albumsAdapter.setOnAlbumClickListener(AlbumsActivity.this);
+    }
+
+    private void removeListeners() {
+        albumsAdapter.removeOnAlbumClickListener();
     }
 }

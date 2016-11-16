@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +24,8 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.PictureViewH
         void onPictureClicked(int position);
     }
 
-    private List<Picture> pictureList = new ArrayList<>();
-    private OnPictureClickListener onPictureClickListener;
+    private List<Picture> pictureList;
+    private WeakReference<OnPictureClickListener> onPictureClickListener;
     private int itemDimension;
 
     public AlbumAdapter(int itemDimension) {
@@ -52,8 +53,8 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.PictureViewH
         holder.ivThumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (onPictureClickListener != null) {
-                    onPictureClickListener.onPictureClicked(currentPosition);
+                if (onPictureClickListener.get() != null) {
+                    onPictureClickListener.get().onPictureClicked(currentPosition);
                 }
             }
         });
@@ -65,15 +66,20 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.PictureViewH
     }
 
     public void setPictureList(List<Picture> pictureList) {
+        this.pictureList = new ArrayList<>(pictureList.size());
         this.pictureList = pictureList;
     }
 
     public void setOnPictureClickListener(OnPictureClickListener onPictureClickListener) {
-        this.onPictureClickListener = onPictureClickListener;
+        this.onPictureClickListener = new WeakReference<>(onPictureClickListener);
+    }
+
+    public void removeOnPictureClickListener() {
+        this.onPictureClickListener = null;
     }
 
     public List<Uri> getUriList() {
-        List<Uri> stringList = new ArrayList<>();
+        List<Uri> stringList = new ArrayList<>(pictureList.size());
 
         for (Picture picture : pictureList) {
             Uri uri = new Uri.Builder()
@@ -84,10 +90,6 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.PictureViewH
         }
 
         return stringList;
-    }
-
-    public List<Picture> getPictureList() {
-        return pictureList;
     }
 
     class PictureViewHolder extends RecyclerView.ViewHolder {

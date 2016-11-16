@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +24,8 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
         void onAlbumClicked(Album.StorageType storageType, String albumId);
     }
 
-    private List<Album> albumList = new ArrayList<>();
-    private OnAlbumClickListener onAlbumClickListener;
+    private List<Album> albumList;
+    private WeakReference<OnAlbumClickListener> onAlbumClickListener;
     private int itemDimension;
 
     public AlbumsAdapter(int itemDimension) {
@@ -54,8 +55,8 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
         holder.ivThumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (onAlbumClickListener != null) {
-                    onAlbumClickListener.onAlbumClicked(album.getBucketStorageType(), album.getBucketId());
+                if (onAlbumClickListener.get() != null) {
+                    onAlbumClickListener.get().onAlbumClicked(album.getBucketStorageType(), album.getBucketId());
                 }
             }
         });
@@ -72,11 +73,16 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
     }
 
     public void setAlbumList(List<Album> albumList) {
+        this.albumList = new ArrayList<>(albumList.size());
         this.albumList = albumList;
     }
 
     public void setOnAlbumClickListener(OnAlbumClickListener onAlbumClickListener) {
-        this.onAlbumClickListener = onAlbumClickListener;
+        this.onAlbumClickListener = new WeakReference<>(onAlbumClickListener);
+    }
+
+    public void removeOnAlbumClickListener() {
+        this.onAlbumClickListener = null;
     }
 
     class AlbumsViewHolder extends RecyclerView.ViewHolder {
