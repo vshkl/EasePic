@@ -39,7 +39,6 @@ public class PicturesPagerActivity extends MvpAppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
-        getSupportActionBar().setShowHideAnimationEnabled(true);
 
         Intent intent = getIntent();
         if (intent != null) {

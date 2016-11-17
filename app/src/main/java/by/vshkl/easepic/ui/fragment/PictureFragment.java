@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 
 import com.github.piasy.biv.view.BigImageView;
 
@@ -28,8 +30,7 @@ public class PictureFragment extends Fragment {
     BigImageView ivPicture;
 
     private Unbinder unbinder;
-    private boolean isActionBarHidden = false;
-    private boolean isToolbarHidden = false;
+    private boolean isShown = true;
 
     public static PictureFragment newInstance(Picture picture) {
         Bundle arguments = new Bundle();
@@ -65,10 +66,18 @@ public class PictureFragment extends Fragment {
     @OnClick(R.id.iv_picture)
     void onClick() {
         WeakReference<PicturesPagerActivity> activity = new WeakReference<>((PicturesPagerActivity) getActivity());
-        if (activity.get().getSupportActionBar().isShowing()) {
-            activity.get().getSupportActionBar().hide();
+        if (isShown) {
+            activity.get().getToolbar()
+                    .animate()
+                    .translationY(-activity.get().getToolbarHeight())
+                    .setInterpolator(new AccelerateInterpolator());
+            isShown = false;
         } else {
-            activity.get().getSupportActionBar().show();
+            activity.get().getToolbar()
+                    .animate()
+                    .translationY(0)
+                    .setInterpolator(new DecelerateInterpolator());
+            isShown = true;
         }
         activity.clear();
     }
