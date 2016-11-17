@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">EasePic</string>
 
+    <string name="menu_settings">Settings</string>
+    <string name="menu_sort">Sort</string>
+    <string name="menu_sort_by_date">By date</string>
+    <string name="menu_sort_by_name">By name</string>
+
     <string name="permission_read_external_storage_rationale">Read external storage permission is needed to show gallery albums.</string>
     <string name="permission_read_external_storage_granted">Read external storage permission has been granted</string>
     <string name="permission_read_external_storage_not_granted">Read external storage permission were not granted.</string>
@@ -10,5 +15,10 @@
     <string name="error_get_pictures">Failed to get pictures</string>
 
     <string name="ok">Ok</string>
+
+    <!-- Preferences -->
+    <string name="key_sort_order">by.vshkl.easepic.SORT_ORDER</string>
+    <string name="value_sort_order_by_date">by.vshkl.easepic.SORT_ORDER_BY_DATE</string>
+    <string name="value_sort_order_by_name">by.vshkl.easepic.SORT_ORDER_BY_NAME</string>
 
 </resources>
