@@ -82,8 +82,4 @@ public class PicturesPagerActivity extends MvpAppCompatActivity {
     public Toolbar getToolbar() {
         return toolbar;
     }
-
-    public int getToolbarHeight() {
-        return toolbar.getHeight();
-    }
 }

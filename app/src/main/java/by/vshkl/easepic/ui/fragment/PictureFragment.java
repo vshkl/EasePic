@@ -12,8 +12,6 @@ import android.view.animation.DecelerateInterpolator;
 
 import com.github.piasy.biv.view.BigImageView;
 
-import java.lang.ref.WeakReference;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -52,6 +50,7 @@ public class PictureFragment extends Fragment {
         if (bundle != null) {
             Picture picture = bundle.getParcelable(ARG_PICTURE);
             ivPicture.showImage(new Uri.Builder().scheme("file").path(picture.getPath()).build());
+            ((PicturesPagerActivity) getActivity()).getToolbar().setTitle(picture.getName());
         }
 
         return view;
@@ -65,20 +64,18 @@ public class PictureFragment extends Fragment {
 
     @OnClick(R.id.iv_picture)
     void onClick() {
-        WeakReference<PicturesPagerActivity> activity = new WeakReference<>((PicturesPagerActivity) getActivity());
         if (isShown) {
-            activity.get().getToolbar()
+            ((PicturesPagerActivity) getActivity()).getToolbar()
                     .animate()
-                    .translationY(-activity.get().getToolbarHeight())
+                    .translationY(-((PicturesPagerActivity) getActivity()).getToolbar().getHeight())
                     .setInterpolator(new AccelerateInterpolator());
             isShown = false;
         } else {
-            activity.get().getToolbar()
+            ((PicturesPagerActivity) getActivity()).getToolbar()
                     .animate()
                     .translationY(0)
                     .setInterpolator(new DecelerateInterpolator());
             isShown = true;
         }
-        activity.clear();
     }
 }
