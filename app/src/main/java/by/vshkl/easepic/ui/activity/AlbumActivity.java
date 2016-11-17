@@ -120,9 +120,8 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
 
     @Override
     public void onPictureClicked(int position) {
-        new ImageViewer.Builder(this, albumAdapter.getUriList())
+        new ImageViewer.Builder(this, albumAdapter.getPictureList())
                 .setStartPosition(position)
-                .hideStatusBar(false)
                 .show();
     }
 

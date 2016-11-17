@@ -2,7 +2,6 @@ package by.vshkl.easepic.ui.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Build;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.ViewPager;
@@ -17,6 +16,7 @@ import android.widget.RelativeLayout;
 import java.util.List;
 
 import by.vshkl.easepic.R;
+import by.vshkl.easepic.mvp.model.Picture;
 import by.vshkl.easepic.ui.adapter.ImageViewerAdapter;
 import by.vshkl.easepic.ui.detector.Direction;
 import by.vshkl.easepic.ui.detector.SwipeDirectionDetector;
@@ -27,6 +27,7 @@ import by.vshkl.easepic.ui.listener.SwipeToDismissListener;
 public class ImageViewerView extends RelativeLayout implements OnDismissListener, OnViewMoveListener {
 
     private View backgroundView;
+    private MarqueeToolbar toolbar;
     private MultitouchViewPager vpPager;
     private ViewGroup dismissContainer;
     private ImageViewerAdapter adapter;
@@ -125,16 +126,24 @@ public class ImageViewerView extends RelativeLayout implements OnDismissListener
 
     //------------------------------------------------------------------------------------------------------------------
 
-    public void setUris(List<Uri> uriList, int startPosition) {
-        adapter = new ImageViewerAdapter(getContext(), uriList);
+    public void setPictures(List<Picture> pictureList, int startPosition) {
+        adapter = new ImageViewerAdapter(getContext(), pictureList);
         vpPager.setAdapter(adapter);
         vpPager.setCurrentItem(startPosition);
+
+//        setupToolbar();
+    }
+
+    public void setupToolbar() {
+        toolbar.setTitle(adapter.getPicture(vpPager.getCurrentItem()).getName());
     }
 
     private void initialize() {
         inflate(getContext(), R.layout.dialog_image_viewer, this);
 
         backgroundView = findViewById(R.id.background_view);
+
+//        toolbar = (MarqueeToolbar) findViewById(R.id.toolbar);
 
         vpPager = (MultitouchViewPager) findViewById(R.id.vp_pager);
 
@@ -173,8 +182,8 @@ public class ImageViewerView extends RelativeLayout implements OnDismissListener
         return adapter.isScaled();
     }
 
-    public Uri getUri() {
-        return adapter.getUri(vpPager.getCurrentItem());
+    public Picture getPicture() {
+        return adapter.getPicture(vpPager.getCurrentItem());
     }
 
     public void setPageChangeListener(ViewPager.OnPageChangeListener pageChangeListener) {

@@ -3,7 +3,6 @@ package by.vshkl.easepic.ui.view;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.net.Uri;
 import android.support.annotation.ColorInt;
 import android.support.annotation.StyleRes;
 import android.support.v4.view.ViewPager;
@@ -13,6 +12,7 @@ import android.view.KeyEvent;
 import java.util.List;
 
 import by.vshkl.easepic.R;
+import by.vshkl.easepic.mvp.model.Picture;
 import by.vshkl.easepic.ui.listener.OnDismissListener;
 import by.vshkl.easepic.ui.listener.OnImageChangeListener;
 
@@ -54,18 +54,18 @@ public class ImageViewer implements OnDismissListener, DialogInterface.OnKeyList
     //------------------------------------------------------------------------------------------------------------------
 
     public void show() {
-        if (!builder.uris.isEmpty()) {
+        if (!builder.pictureList.isEmpty()) {
             dialog.show();
         }
     }
 
-    public Uri getUri() {
-        return viewer.getUri();
+    public Picture getPicture() {
+        return viewer.getPicture();
     }
 
     private void createDialog() {
         viewer = new ImageViewerView(builder.context);
-        viewer.setUris(builder.uris, builder.startPosition);
+        viewer.setPictures(builder.pictureList, builder.startPosition);
         viewer.setOnDismissListener(this);
         viewer.setBackgroundColor(builder.backgroundColor);
         viewer.setBackgroundColor(builder.backgroundColor);
@@ -98,7 +98,7 @@ public class ImageViewer implements OnDismissListener, DialogInterface.OnKeyList
     public static class Builder {
 
         private Context context;
-        private List<Uri> uris;
+        private List<Picture> pictureList;
         private
         @ColorInt
         int backgroundColor = Color.BLACK;
@@ -107,9 +107,9 @@ public class ImageViewer implements OnDismissListener, DialogInterface.OnKeyList
         private OnDismissListener onDismissListener;
         private boolean shouldStatusBarHide = true;
 
-        public Builder(Context context, List<Uri> uris) {
+        public Builder(Context context, List<Picture> pictureList) {
             this.context = context;
-            this.uris = uris;
+            this.pictureList = pictureList;
         }
 
         public Builder setBackgroundColor(@ColorInt int color) {

@@ -70,6 +70,10 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.PictureViewH
         this.pictureList = pictureList;
     }
 
+    public List<Picture> getPictureList() {
+        return pictureList;
+    }
+
     public void setOnPictureClickListener(OnPictureClickListener onPictureClickListener) {
         this.onPictureClickListener = new WeakReference<>(onPictureClickListener);
     }
