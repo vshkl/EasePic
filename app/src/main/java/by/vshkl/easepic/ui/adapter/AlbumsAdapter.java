@@ -77,6 +77,10 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
         this.albumList = albumList;
     }
 
+    public List<Album> getAlbumList() {
+        return albumList;
+    }
+
     public void setOnAlbumClickListener(OnAlbumClickListener onAlbumClickListener) {
         this.onAlbumClickListener = new WeakReference<>(onAlbumClickListener);
     }
