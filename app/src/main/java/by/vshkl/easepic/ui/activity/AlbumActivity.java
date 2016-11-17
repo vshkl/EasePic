@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -27,7 +28,6 @@ import by.vshkl.easepic.mvp.view.AlbumView;
 import by.vshkl.easepic.ui.adapter.AlbumAdapter;
 import by.vshkl.easepic.ui.adapter.AlbumAdapter.OnPictureClickListener;
 import by.vshkl.easepic.ui.utils.ErrorUtils;
-import by.vshkl.easepic.ui.view.ImageViewer;
 
 public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, OnPictureClickListener {
 
@@ -120,9 +120,12 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
 
     @Override
     public void onPictureClicked(int position) {
-        new ImageViewer.Builder(this, albumAdapter.getUriList())
-                .setStartPosition(position)
-                .show();
+        Intent intent = new Intent(AlbumActivity.this, PicturesPagerActivity.class);
+        intent.putExtra(PicturesPagerActivity.EXTRA_POSITION, position);
+        intent.putParcelableArrayListExtra(
+                PicturesPagerActivity.EXTRA_PICTURE_LIST,
+                (ArrayList<Picture>) albumAdapter.getPictureList());
+        startActivity(intent);
     }
 
     //------------------------------------------------------------------------------------------------------------------
