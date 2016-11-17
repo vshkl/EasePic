@@ -12,6 +12,7 @@ import android.view.KeyEvent;
 
 import java.util.List;
 
+import by.vshkl.easepic.R;
 import by.vshkl.easepic.ui.listener.OnDismissListener;
 import by.vshkl.easepic.ui.listener.OnImageChangeListener;
 
@@ -83,12 +84,13 @@ public class ImageViewer implements OnDismissListener, DialogInterface.OnKeyList
                 .create();
     }
 
+
     private
     @StyleRes
     int getDialogStyle() {
         return builder.shouldStatusBarHide
-                ? android.R.style.Theme_Translucent_NoTitleBar_Fullscreen
-                : android.R.style.Theme_Translucent_NoTitleBar;
+                ? R.style.AppTheme_Dialog_Fullscreen
+                : R.style.AppTheme_Dialog;
     }
 
     //------------------------------------------------------------------------------------------------------------------

@@ -155,6 +155,7 @@ public class ImageViewerView extends RelativeLayout implements OnDismissListener
         gestureDetector = new GestureDetectorCompat(getContext(), new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
+                onClick(e);
                 return super.onSingleTapConfirmed(e);
             }
         });
@@ -193,5 +194,9 @@ public class ImageViewerView extends RelativeLayout implements OnDismissListener
     private void onActionUp(MotionEvent event) {
         swipeToDismissListener.onTouch(dismissContainer, event);
         vpPager.dispatchTouchEvent(event);
+    }
+
+    private void onClick(MotionEvent event) {
+        super.dispatchTouchEvent(event);
     }
 }
