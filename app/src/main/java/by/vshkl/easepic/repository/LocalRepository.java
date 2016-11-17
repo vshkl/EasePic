@@ -94,6 +94,7 @@ public class LocalRepository implements Repository {
             albumLinkedHashSet = new LinkedHashSet<>(cursor.getCount());
 
             int indexBucketId = cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID);
+            int indexBucketDate = cursor.getColumnIndex(MediaStore.Images.Media.DATE_MODIFIED);
             int indexBucketName = cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
             int indexBucketData = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
 
@@ -102,6 +103,7 @@ public class LocalRepository implements Repository {
             while (cursor.moveToNext()) {
                 Album album = new Album();
                 album.setBucketId(cursor.getString(indexBucketId));
+                album.setBucketDate(cursor.getString(indexBucketDate));
                 album.setBucketName(cursor.getString(indexBucketName));
                 if (storageUri.equals(MediaStore.Images.Media.INTERNAL_CONTENT_URI)) {
                     album.setBucketStorageType(Album.StorageType.INTERNAL);

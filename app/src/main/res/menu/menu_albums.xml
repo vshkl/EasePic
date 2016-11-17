@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.AudiobooksActivity"
+    >
+
+    <item
+        android:id="@+id/action_sort"
+        android:icon="@drawable/ic_sort"
+        android:orderInCategory="1"
+        android:title="@string/menu_sort"
+        app:showAsAction="ifRoom"
+        >
+
+        <menu>
+
+            <item
+                android:icon="@drawable/ic_radio_button_checked"
+                android:id="@+id/action_sort_by_date"
+                android:orderInCategory="1"
+                android:title="@string/menu_sort_by_date"
+                app:showAsAction="never"
+                />
+
+            <item
+                android:icon="@drawable/ic_radio_button_unchecked"
+                android:id="@+id/action_sort_by_name"
+                android:orderInCategory="2"
+                android:title="@string/menu_sort_by_name"
+                app:showAsAction="never"
+                />
+
+        </menu>
+
+    </item>
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="2"
+        android:title="@string/menu_settings"
+        app:showAsAction="never"
+        />
+
+</menu>
