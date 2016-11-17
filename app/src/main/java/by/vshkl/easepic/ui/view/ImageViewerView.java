@@ -113,8 +113,8 @@ public class ImageViewerView extends RelativeLayout implements OnDismissListener
     }
 
     @Override
-    public void onViewMove(float translationY, int translationLimit) {
-        float alpha = 1.0f - (1.0f / translationLimit / 4) * Math.abs(translationY);
+    public void onViewMove(float translationY, int translationThreshold) {
+        float alpha = 1.0f - (1.0f / translationThreshold / 4) * Math.abs(translationY);
         backgroundView.setAlpha(alpha);
     }
 

@@ -11,8 +11,6 @@ import android.view.animation.AccelerateInterpolator;
 
 public class SwipeToDismissListener implements View.OnTouchListener {
 
-    private static final String TRANSLATION = "translation";
-
     private final View swipeView;
     private int translationThreshold;
     private OnDismissListener onDismissListener;
@@ -73,7 +71,7 @@ public class SwipeToDismissListener implements View.OnTouchListener {
         }
 
         final boolean isDismissed = animateTo != 0.0f;
-        ObjectAnimator animator = ObjectAnimator.ofFloat(swipeView, TRANSLATION, currentPosition, animateTo);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(swipeView, "translationY", currentPosition, animateTo);
 
         animator.setDuration(200);
         animator.setInterpolator(new AccelerateInterpolator());
