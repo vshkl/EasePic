@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 
@@ -22,6 +23,8 @@ public class PicturesPagerActivity extends MvpAppCompatActivity {
     public static final String EXTRA_POSITION = "EXTRA_POSITION";
     public static final String EXTRA_PICTURE_LIST = "EXTRA_PICTURE_LIST";
 
+    @BindView(R.id.root)
+    View rootView;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.vp_pictures)
@@ -36,6 +39,7 @@ public class PicturesPagerActivity extends MvpAppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
+        getSupportActionBar().setShowHideAnimationEnabled(true);
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -52,6 +56,20 @@ public class PicturesPagerActivity extends MvpAppCompatActivity {
     }
 
     @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -60,5 +78,13 @@ public class PicturesPagerActivity extends MvpAppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public Toolbar getToolbar() {
+        return toolbar;
+    }
+
+    public int getToolbarHeight() {
+        return toolbar.getHeight();
     }
 }

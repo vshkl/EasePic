@@ -10,11 +10,15 @@ import android.view.ViewGroup;
 
 import com.github.piasy.biv.view.BigImageView;
 
+import java.lang.ref.WeakReference;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import by.vshkl.easepic.R;
 import by.vshkl.easepic.mvp.model.Picture;
+import by.vshkl.easepic.ui.activity.PicturesPagerActivity;
 
 public class PictureFragment extends Fragment {
 
@@ -24,6 +28,8 @@ public class PictureFragment extends Fragment {
     BigImageView ivPicture;
 
     private Unbinder unbinder;
+    private boolean isActionBarHidden = false;
+    private boolean isToolbarHidden = false;
 
     public static PictureFragment newInstance(Picture picture) {
         Bundle arguments = new Bundle();
@@ -54,5 +60,16 @@ public class PictureFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @OnClick(R.id.iv_picture)
+    void onClick() {
+        WeakReference<PicturesPagerActivity> activity = new WeakReference<>((PicturesPagerActivity) getActivity());
+        if (activity.get().getSupportActionBar().isShowing()) {
+            activity.get().getSupportActionBar().hide();
+        } else {
+            activity.get().getSupportActionBar().show();
+        }
+        activity.clear();
     }
 }
