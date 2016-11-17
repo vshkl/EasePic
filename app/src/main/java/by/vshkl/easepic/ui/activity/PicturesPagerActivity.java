@@ -17,6 +17,7 @@ import by.vshkl.easepic.R;
 import by.vshkl.easepic.mvp.model.Picture;
 import by.vshkl.easepic.ui.adapter.PicturesPagerAdapter;
 import by.vshkl.easepic.ui.common.DepthPageTransformer;
+import by.vshkl.easepic.ui.view.MarqueeToolbar;
 
 public class PicturesPagerActivity extends MvpAppCompatActivity {
 
@@ -26,7 +27,7 @@ public class PicturesPagerActivity extends MvpAppCompatActivity {
     @BindView(R.id.root)
     View rootView;
     @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    MarqueeToolbar toolbar;
     @BindView(R.id.vp_pictures)
     ViewPager vpPictures;
 
