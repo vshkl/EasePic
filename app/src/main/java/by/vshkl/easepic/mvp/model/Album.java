@@ -8,6 +8,7 @@ public class Album {
     }
 
     private String bucketId;
+    private String bucketDate;
     private String bucketName;
     private String bucketThumbnail;
     private StorageType bucketStorageType;
@@ -21,6 +22,14 @@ public class Album {
 
     public void setBucketId(String bucketId) {
         this.bucketId = bucketId;
+    }
+
+    public String getBucketDate() {
+        return bucketDate;
+    }
+
+    public void setBucketDate(String bucketDate) {
+        this.bucketDate = bucketDate;
     }
 
     public String getBucketName() {
