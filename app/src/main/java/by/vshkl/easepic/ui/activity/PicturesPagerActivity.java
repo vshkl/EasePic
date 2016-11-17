@@ -15,6 +15,7 @@ import butterknife.ButterKnife;
 import by.vshkl.easepic.R;
 import by.vshkl.easepic.mvp.model.Picture;
 import by.vshkl.easepic.ui.adapter.PicturesPagerAdapter;
+import by.vshkl.easepic.ui.common.DepthPageTransformer;
 
 public class PicturesPagerActivity extends MvpAppCompatActivity {
 
@@ -46,6 +47,7 @@ public class PicturesPagerActivity extends MvpAppCompatActivity {
 
             vpPictures.setAdapter(adapter);
             vpPictures.setCurrentItem(position);
+            vpPictures.setPageTransformer(true, new DepthPageTransformer());
         }
     }
 
