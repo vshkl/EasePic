@@ -15,8 +15,6 @@
     <string name="error_get_albums">Failed to get albums</string>
     <string name="error_get_pictures">Failed to get pictures</string>
 
-    <string name="ok">Ok</string>
-
     <!-- Preferences -->
     <string name="key_sort_order_albums">by.vshkl.easepic.SORT_ORDER.ALBUMS</string>
     <string name="value_sort_order_by_date_albums">by.vshkl.easepic.SORT_ORDER_BY_DATE.ALBUMS</string>
@@ -24,5 +22,10 @@
     <string name="key_sort_order_album">by.vshkl.easepic.SORT_ORDER.ALBUM</string>
     <string name="value_sort_order_by_date_album">by.vshkl.easepic.SORT_ORDER_BY_DATE.ALBUM</string>
     <string name="value_sort_order_by_name_album">by.vshkl.easepic.SORT_ORDER_BY_NAME.ALBUM</string>
+
+    <!-- Dialog -->
+    <string name="dialog_album_edit_title">Rename album</string>
+    <string name="dialog_album_edit_hint">Album name</string>
+    <string name="dialog_album_edit_error">Album name can't be empty</string>
 
 </resources>

@@ -227,7 +227,7 @@ public class AlbumsActivity extends MvpAppCompatActivity implements AlbumsView, 
         if (ActivityCompat.shouldShowRequestPermissionRationale(
                 AlbumsActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
             Snackbar.make(rootVIew, R.string.permission_read_external_storage_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok, new View.OnClickListener() {
+                    .setAction(android.R.string.ok, new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             requestExternalStoragePermission();

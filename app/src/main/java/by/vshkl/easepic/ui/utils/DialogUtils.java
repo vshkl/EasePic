@@ -21,9 +21,9 @@ public class DialogUtils {
         final TextInputLayout inputLayout = (TextInputLayout) container.findViewById(R.id.text_input_layout);
         final TextInputEditText inputEditText = (TextInputEditText) container.findViewById(R.id.text_input_edit_text);
 
-        inputLayout.setHint("Album name");
+        inputLayout.setHint(context.getString(R.string.dialog_album_edit_hint));
 
-        inputEditText.setHint("Album name");
+        inputEditText.setHint(context.getString(R.string.dialog_album_edit_hint));
         inputEditText.setText(albumName);
         inputEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -40,7 +40,7 @@ public class DialogUtils {
             public void afterTextChanged(Editable editable) {
                 if (editable.length() == 0) {
                     inputLayout.setErrorEnabled(true);
-                    inputLayout.setError("Album name can't be empty");
+                    inputLayout.setError(context.getString(R.string.dialog_album_edit_error));
                 } else {
                     inputLayout.setError(null);
                     inputLayout.setErrorEnabled(false);
@@ -49,9 +49,9 @@ public class DialogUtils {
         });
 
         new AlertDialog.Builder(context)
-                .setTitle("Rename album")
+                .setTitle(context.getString(R.string.dialog_album_edit_title))
                 .setView(container)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (onAlbumNameEditedListener != null) {
@@ -59,7 +59,7 @@ public class DialogUtils {
                         }
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                     }
