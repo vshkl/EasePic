@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -15,6 +16,8 @@ import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -27,6 +30,7 @@ import by.vshkl.easepic.mvp.view.AlbumView;
 import by.vshkl.easepic.ui.adapter.AlbumAdapter;
 import by.vshkl.easepic.ui.adapter.AlbumAdapter.OnPictureClickListener;
 import by.vshkl.easepic.ui.utils.ErrorUtils;
+import by.vshkl.easepic.ui.utils.PreferenceUtils;
 import by.vshkl.easepic.ui.view.MarqueeToolbar;
 
 public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, OnPictureClickListener {
@@ -77,10 +81,51 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_album, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem itemSortByDate = menu.findItem(R.id.action_sort_by_date);
+        MenuItem itemSortByName = menu.findItem(R.id.action_sort_by_name);
+
+        String sortOrder = PreferenceUtils.getSortOrder(AlbumActivity.this,
+                getString(R.string.key_sort_order_album),
+                getString(R.string.value_sort_order_by_date_album));
+        if (sortOrder.equals(getString(R.string.value_sort_order_by_date_album))) {
+            itemSortByDate.setIcon(R.drawable.ic_radio_button_checked);
+            itemSortByName.setIcon(R.drawable.ic_radio_button_unchecked);
+        } else if (sortOrder.equals(getString(R.string.value_sort_order_by_name_album))) {
+            itemSortByDate.setIcon(R.drawable.ic_radio_button_unchecked);
+            itemSortByName.setIcon(R.drawable.ic_radio_button_checked);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                return true;
+            case R.id.action_sort_by_date:
+                PreferenceUtils.storeSortOrder(AlbumActivity.this,
+                        getString(R.string.key_sort_order_album),
+                        getString(R.string.value_sort_order_by_date_album));
+                invalidateOptionsMenu();
+                sortAndSetPicturesList(albumAdapter.getPictureList());
+                return true;
+            case R.id.action_sort_by_name:
+                PreferenceUtils.storeSortOrder(AlbumActivity.this,
+                        getString(R.string.key_sort_order_album),
+                        getString(R.string.value_sort_order_by_name_album));
+                invalidateOptionsMenu();
+                sortAndSetPicturesList(albumAdapter.getPictureList());
+                return true;
+            case R.id.action_settings:
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -90,8 +135,7 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
 
     @Override
     public void showPictures(List<Picture> pictureList) {
-        albumAdapter.setPictureList(pictureList);
-        albumAdapter.notifyDataSetChanged();
+        sortAndSetPicturesList(pictureList);
     }
 
     @Override
@@ -159,6 +203,33 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
 
         albumAdapter = new AlbumAdapter(itemDimension);
         rvGallery.setAdapter(albumAdapter);
+    }
+
+    private void sortAndSetPicturesList(List<Picture> pictureList) {
+        String sortOrder = PreferenceUtils.getSortOrder(AlbumActivity.this,
+                getString(R.string.key_sort_order_album),
+                getString(R.string.value_sort_order_by_date_album));
+        if (sortOrder.equals(getString(R.string.value_sort_order_by_date_album))) {
+            if (pictureList.size() > 0) {
+                Collections.sort(pictureList, new Comparator<Picture>() {
+                    @Override
+                    public int compare(Picture object1, Picture object2) {
+                        return object2.getDate().toUpperCase().compareTo(object1.getDate().toUpperCase());
+                    }
+                });
+            }
+        } else if (sortOrder.equals(getString(R.string.value_sort_order_by_name_album))) {
+            if (pictureList.size() > 0) {
+                Collections.sort(pictureList, new Comparator<Picture>() {
+                    @Override
+                    public int compare(Picture object1, Picture object2) {
+                        return object1.getName().toUpperCase().compareTo(object2.getName().toUpperCase());
+                    }
+                });
+            }
+        }
+        albumAdapter.setPictureList(pictureList);
+        albumAdapter.notifyDataSetChanged();
     }
 
     private void setListeners() {
