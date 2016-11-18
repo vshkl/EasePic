@@ -5,7 +5,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +27,7 @@ import by.vshkl.easepic.mvp.view.AlbumView;
 import by.vshkl.easepic.ui.adapter.AlbumAdapter;
 import by.vshkl.easepic.ui.adapter.AlbumAdapter.OnPictureClickListener;
 import by.vshkl.easepic.ui.utils.ErrorUtils;
+import by.vshkl.easepic.ui.view.MarqueeToolbar;
 
 public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, OnPictureClickListener {
 
@@ -35,7 +35,7 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
     public static final String EXTRA_ALBUM_ID = "EXTRA_ALBUM_ID";
 
     @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    MarqueeToolbar toolbar;
     @BindView(R.id.pb_loading)
     ProgressBar pbLoading;
     @BindView(R.id.rv_gallery)
