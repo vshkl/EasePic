@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.activity.AlbumsActivity"
+    tools:context=".ui.activity.AlbumActivity"
     >
 
     <item
@@ -17,16 +17,16 @@
         <menu>
 
             <item
-                android:icon="@drawable/ic_radio_button_checked"
                 android:id="@+id/action_sort_by_date"
+                android:icon="@drawable/ic_radio_button_checked"
                 android:orderInCategory="1"
                 android:title="@string/menu_sort_by_date"
                 app:showAsAction="never"
                 />
 
             <item
-                android:icon="@drawable/ic_radio_button_unchecked"
                 android:id="@+id/action_sort_by_name"
+                android:icon="@drawable/ic_radio_button_unchecked"
                 android:orderInCategory="2"
                 android:title="@string/menu_sort_by_name"
                 app:showAsAction="never"
@@ -37,9 +37,9 @@
     </item>
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_rename"
         android:orderInCategory="2"
-        android:title="@string/menu_settings"
+        android:title="@string/menu_rename"
         app:showAsAction="never"
         />
 
