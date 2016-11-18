@@ -29,12 +29,13 @@ import by.vshkl.easepic.mvp.presenter.AlbumPresenter;
 import by.vshkl.easepic.mvp.view.AlbumView;
 import by.vshkl.easepic.ui.adapter.AlbumAdapter;
 import by.vshkl.easepic.ui.adapter.AlbumAdapter.OnPictureClickListener;
+import by.vshkl.easepic.ui.listener.OnAlbumNameEditedListener;
 import by.vshkl.easepic.ui.utils.DialogUtils;
 import by.vshkl.easepic.ui.utils.ErrorUtils;
 import by.vshkl.easepic.ui.utils.PreferenceUtils;
 import by.vshkl.easepic.ui.view.MarqueeToolbar;
 
-public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, OnPictureClickListener {
+public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, OnPictureClickListener, OnAlbumNameEditedListener {
 
     public static final String EXTRA_STORAGE_TYPE = "EXTRA_STORAGE_TYPE";
     public static final String EXTRA_ALBUM_ID = "EXTRA_ALBUM_ID";
@@ -131,7 +132,8 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
                 sortAndSetPicturesList(albumAdapter.getPictureList());
                 return true;
             case R.id.action_rename:
-                DialogUtils.showAlbumRenameDialog(AlbumActivity.this, getLayoutInflater(), toolbar.getTitle().toString());
+                DialogUtils.showAlbumRenameDialog(AlbumActivity.this, getLayoutInflater(), AlbumActivity.this,
+                        toolbar.getTitle().toString());
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -176,6 +178,13 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
                 PicturesPagerActivity.EXTRA_PICTURE_LIST,
                 (ArrayList<Picture>) albumAdapter.getPictureList());
         startActivity(intent);
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void onAlbumNameEdited(String newName) {
+        Toast.makeText(this, newName, Toast.LENGTH_SHORT).show();
     }
 
     //------------------------------------------------------------------------------------------------------------------

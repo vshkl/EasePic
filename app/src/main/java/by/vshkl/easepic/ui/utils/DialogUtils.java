@@ -9,13 +9,14 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import by.vshkl.easepic.R;
+import by.vshkl.easepic.ui.listener.OnAlbumNameEditedListener;
 
 public class DialogUtils {
 
-    public static void showAlbumRenameDialog(final Context context, LayoutInflater inflater, String albumName) {
+    public static void showAlbumRenameDialog(final Context context, LayoutInflater inflater,
+                                             final OnAlbumNameEditedListener onAlbumNameEditedListener, String albumName) {
         final FrameLayout container = (FrameLayout) inflater.inflate(R.layout.view_text_input, null);
         final TextInputLayout inputLayout = (TextInputLayout) container.findViewById(R.id.text_input_layout);
         final TextInputEditText inputEditText = (TextInputEditText) container.findViewById(R.id.text_input_edit_text);
@@ -53,7 +54,9 @@ public class DialogUtils {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(context, "Rename 'em all!", Toast.LENGTH_SHORT).show();
+                        if (onAlbumNameEditedListener != null) {
+                            onAlbumNameEditedListener.onAlbumNameEdited(inputEditText.getText().toString());
+                        }
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
