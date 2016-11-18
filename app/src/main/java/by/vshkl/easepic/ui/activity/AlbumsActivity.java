@@ -91,11 +91,13 @@ public class AlbumsActivity extends MvpAppCompatActivity implements AlbumsView, 
         MenuItem itemSortByDate = menu.findItem(R.id.action_sort_by_date);
         MenuItem itemSortByName = menu.findItem(R.id.action_sort_by_name);
 
-        String sortOrder = PreferenceUtils.getSortOrder(AlbumsActivity.this);
-        if (sortOrder.equals(getString(R.string.value_sort_order_by_date))) {
+        String sortOrder = PreferenceUtils.getSortOrder(AlbumsActivity.this,
+                getString(R.string.key_sort_order_albums),
+                getString(R.string.value_sort_order_by_date_albums));
+        if (sortOrder.equals(getString(R.string.value_sort_order_by_date_albums))) {
             itemSortByDate.setIcon(R.drawable.ic_radio_button_checked);
             itemSortByName.setIcon(R.drawable.ic_radio_button_unchecked);
-        } else if (sortOrder.equals(getString(R.string.value_sort_order_by_name))) {
+        } else if (sortOrder.equals(getString(R.string.value_sort_order_by_name_albums))) {
             itemSortByDate.setIcon(R.drawable.ic_radio_button_unchecked);
             itemSortByName.setIcon(R.drawable.ic_radio_button_checked);
         }
@@ -107,12 +109,16 @@ public class AlbumsActivity extends MvpAppCompatActivity implements AlbumsView, 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_sort_by_date:
-                PreferenceUtils.storeSortOrder(AlbumsActivity.this, getString(R.string.value_sort_order_by_date));
+                PreferenceUtils.storeSortOrder(AlbumsActivity.this,
+                        getString(R.string.key_sort_order_albums),
+                        getString(R.string.value_sort_order_by_date_albums));
                 invalidateOptionsMenu();
                 sortAndSetAlbumsList(albumsAdapter.getAlbumList());
                 return true;
             case R.id.action_sort_by_name:
-                PreferenceUtils.storeSortOrder(AlbumsActivity.this, getString(R.string.value_sort_order_by_name));
+                PreferenceUtils.storeSortOrder(AlbumsActivity.this,
+                        getString(R.string.key_sort_order_albums),
+                        getString(R.string.value_sort_order_by_name_albums));
                 invalidateOptionsMenu();
                 sortAndSetAlbumsList(albumsAdapter.getAlbumList());
                 return true;
@@ -233,15 +239,16 @@ public class AlbumsActivity extends MvpAppCompatActivity implements AlbumsView, 
     }
 
     private void requestExternalStoragePermission() {
-        ActivityCompat.requestPermissions(
-                AlbumsActivity.this,
+        ActivityCompat.requestPermissions(AlbumsActivity.this,
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                 PERMISSION_REQUEST_READ_EXTERNAL_STORAGE);
     }
 
     private void sortAndSetAlbumsList(List<Album> albumList) {
-        String sortOrder = PreferenceUtils.getSortOrder(AlbumsActivity.this);
-        if (sortOrder.equals(getString(R.string.value_sort_order_by_date))) {
+        String sortOrder = PreferenceUtils.getSortOrder(AlbumsActivity.this,
+                getString(R.string.key_sort_order_albums),
+                getString(R.string.value_sort_order_by_date_albums));
+        if (sortOrder.equals(getString(R.string.value_sort_order_by_date_albums))) {
             if (albumList.size() > 0) {
                 Collections.sort(albumList, new Comparator<Album>() {
                     @Override
@@ -250,7 +257,7 @@ public class AlbumsActivity extends MvpAppCompatActivity implements AlbumsView, 
                     }
                 });
             }
-        } else if (sortOrder.equals(getString(R.string.value_sort_order_by_name))) {
+        } else if (sortOrder.equals(getString(R.string.value_sort_order_by_name_albums))) {
             if (albumList.size() > 0) {
                 Collections.sort(albumList, new Comparator<Album>() {
                     @Override
