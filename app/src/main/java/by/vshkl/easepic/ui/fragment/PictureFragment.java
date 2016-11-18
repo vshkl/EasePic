@@ -12,6 +12,8 @@ import android.view.animation.DecelerateInterpolator;
 
 import com.github.piasy.biv.view.BigImageView;
 
+import java.lang.ref.WeakReference;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -51,6 +53,7 @@ public class PictureFragment extends Fragment {
             Picture picture = bundle.getParcelable(ARG_PICTURE);
             ivPicture.showImage(new Uri.Builder().scheme("file").path(picture.getPath()).build());
             ((PicturesPagerActivity) getActivity()).getToolbar().setTitle(picture.getName());
+            System.out.println(picture.getName());
         }
 
         return view;
@@ -64,18 +67,45 @@ public class PictureFragment extends Fragment {
 
     @OnClick(R.id.iv_picture)
     void onClick() {
+        handleUiVisibility();
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    private void handleUiVisibility() {
+        final WeakReference<PicturesPagerActivity> activityRef =
+                new WeakReference<>((PicturesPagerActivity) getActivity());
+        final WeakReference<View> decorViewRef =
+                new WeakReference<>(activityRef.get().getWindow().getDecorView());
+
+        decorViewRef.get().setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+            @Override
+            public void onSystemUiVisibilityChange(int visibility) {
+                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                    activityRef.get()
+                            .getToolbar()
+                            .animate()
+                            .translationY(0)
+                            .setInterpolator(new DecelerateInterpolator());
+                } else {
+                    activityRef.get()
+                            .getToolbar()
+                            .animate()
+                            .translationY(-activityRef.get().getToolbar().getHeight())
+                            .setInterpolator(new AccelerateInterpolator());
+                }
+            }
+        });
+
         if (isShown) {
-            ((PicturesPagerActivity) getActivity()).getToolbar()
-                    .animate()
-                    .translationY(-((PicturesPagerActivity) getActivity()).getToolbar().getHeight())
-                    .setInterpolator(new AccelerateInterpolator());
+            decorViewRef.get().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
             isShown = false;
         } else {
-            ((PicturesPagerActivity) getActivity()).getToolbar()
-                    .animate()
-                    .translationY(0)
-                    .setInterpolator(new DecelerateInterpolator());
+            decorViewRef.get().setSystemUiVisibility(View.VISIBLE);
             isShown = true;
         }
+
+        activityRef.clear();
+        decorViewRef.clear();
     }
 }
