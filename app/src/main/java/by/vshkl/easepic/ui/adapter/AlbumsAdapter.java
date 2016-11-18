@@ -21,7 +21,7 @@ import by.vshkl.easepic.mvp.model.Album;
 public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsViewHolder> {
 
     public interface OnAlbumClickListener {
-        void onAlbumClicked(Album.StorageType storageType, String albumId);
+        void onAlbumClicked(Album.StorageType storageType, String albumId, String albumName);
     }
 
     private List<Album> albumList;
@@ -56,7 +56,8 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
             @Override
             public void onClick(View view) {
                 if (onAlbumClickListener.get() != null) {
-                    onAlbumClickListener.get().onAlbumClicked(album.getBucketStorageType(), album.getBucketId());
+                    onAlbumClickListener.get().onAlbumClicked(
+                            album.getBucketStorageType(), album.getBucketId(), album.getBucketName());
                 }
             }
         });

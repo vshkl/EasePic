@@ -178,10 +178,11 @@ public class AlbumsActivity extends MvpAppCompatActivity implements AlbumsView, 
     //------------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void onAlbumClicked(Album.StorageType storageType, String albumId) {
+    public void onAlbumClicked(Album.StorageType storageType, String albumId, String albumName) {
         Intent intent = new Intent(AlbumsActivity.this, AlbumActivity.class);
         intent.putExtra(AlbumActivity.EXTRA_STORAGE_TYPE, storageType);
         intent.putExtra(AlbumActivity.EXTRA_ALBUM_ID, albumId);
+        intent.putExtra(AlbumActivity.EXTRA_ALBUM_NAME, albumName);
         startActivity(intent);
     }
 

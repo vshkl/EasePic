@@ -37,6 +37,7 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
 
     public static final String EXTRA_STORAGE_TYPE = "EXTRA_STORAGE_TYPE";
     public static final String EXTRA_ALBUM_ID = "EXTRA_ALBUM_ID";
+    public static final String EXTRA_ALBUM_NAME = "EXTRA_ALBUM_NAME";
 
     @BindView(R.id.toolbar)
     MarqueeToolbar toolbar;
@@ -55,10 +56,13 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
         ButterKnife.bind(AlbumActivity.this);
+
+        Intent intent = getIntent();
+
+        toolbar.setTitle(intent.getStringExtra(EXTRA_ALBUM_NAME));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Intent intent = getIntent();
         initializePresenter(
                 (Album.StorageType) intent.getSerializableExtra(EXTRA_STORAGE_TYPE),
                 intent.getStringExtra(EXTRA_ALBUM_ID));
@@ -125,7 +129,7 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
                 invalidateOptionsMenu();
                 sortAndSetPicturesList(albumAdapter.getPictureList());
                 return true;
-            case R.id.action_settings:
+            case R.id.action_rename:
                 return true;
         }
         return super.onOptionsItemSelected(item);
