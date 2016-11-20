@@ -26,6 +26,7 @@ public class AlbumPresenter extends MvpPresenter<AlbumView> {
     private Repository repository;
     private Album.StorageType storageType;
     private String albumId;
+    private String newAlbumName;
 
     public void onStart(Context context) {
         repository = new LocalRepository(context);
@@ -40,8 +41,6 @@ public class AlbumPresenter extends MvpPresenter<AlbumView> {
     }
 
     public void getPictures() {
-        System.out.println(storageType);
-        System.out.println(albumId);
         disposable = repository.getPictures(storageType, albumId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -67,11 +66,39 @@ public class AlbumPresenter extends MvpPresenter<AlbumView> {
                 });
     }
 
+    public void updateAlbumName() {
+        disposable = repository.updateAlbumName(storageType, albumId, newAlbumName)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .onErrorReturn(new Function<Throwable, Boolean>() {
+                    @Override
+                    public Boolean apply(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
+                        getViewState().showError(ErrorUtils.Error.ERROR_ALBUM_RENAME_FAILED);
+                        return null;
+                    }
+                })
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+                        if (aBoolean) {
+                            getViewState().showUpdatedAlbumName(newAlbumName);
+                        } else {
+                            getViewState().showError(ErrorUtils.Error.ERROR_ALBUM_RENAME_FAILED);
+                        }
+                    }
+                });
+    }
+
     public void setStorageType(Album.StorageType storageType) {
         this.storageType = storageType;
     }
 
     public void setAlbumId(String albumId) {
         this.albumId = albumId;
+    }
+
+    public void setNewAlbumName(String newAlbumName) {
+        this.newAlbumName = newAlbumName;
     }
 }

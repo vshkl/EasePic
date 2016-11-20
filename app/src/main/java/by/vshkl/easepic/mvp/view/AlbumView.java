@@ -11,6 +11,8 @@ public interface AlbumView extends MvpView {
 
     void showPictures(List<Picture> pictureList);
 
+    void showUpdatedAlbumName(String newAlbumName);
+
     void showMessage(String message);
 
     void showError(ErrorUtils.Error error);

@@ -147,6 +147,12 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
     }
 
     @Override
+    public void showUpdatedAlbumName(String newAlbumName) {
+        toolbar.setTitle(newAlbumName);
+        setSupportActionBar(toolbar);
+    }
+
+    @Override
     public void showMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
@@ -184,7 +190,8 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
 
     @Override
     public void onAlbumNameEdited(String newName) {
-        Toast.makeText(this, newName, Toast.LENGTH_SHORT).show();
+        albumPresenter.setNewAlbumName(newName);
+        albumPresenter.updateAlbumName();
     }
 
     //------------------------------------------------------------------------------------------------------------------

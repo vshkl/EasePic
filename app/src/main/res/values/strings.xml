@@ -14,6 +14,7 @@
     <string name="error_no_pictures">No pictures found</string>
     <string name="error_get_albums">Failed to get albums</string>
     <string name="error_get_pictures">Failed to get pictures</string>
+    <string name="error_album_rename_failed">Failed to rename album</string>
 
     <!-- Preferences -->
     <string name="key_sort_order_albums">by.vshkl.easepic.SORT_ORDER.ALBUMS</string>
@@ -26,6 +27,6 @@
     <!-- Dialog -->
     <string name="dialog_album_edit_title">Rename album</string>
     <string name="dialog_album_edit_hint">Album name</string>
-    <string name="dialog_album_edit_error">Album name can't be empty</string>
+    <string name="dialog_album_edit_error">Album name can\'t be empty</string>
 
 </resources>
