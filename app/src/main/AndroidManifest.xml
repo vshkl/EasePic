@@ -29,12 +29,12 @@
         <activity
             android:name=".ui.activity.AlbumActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/AppTheme.NoActionBar.SwipeBack"
             />
 
         <activity
             android:name=".ui.activity.PicturesPagerActivity"
-            android:theme="@style/AppThemeDark.NoActionBar"
+            android:theme="@style/AppThemeDark.NoActionBar.SwipeBack"
             />
 
     </application>
