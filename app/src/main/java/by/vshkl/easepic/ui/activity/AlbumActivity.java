@@ -35,7 +35,8 @@ import by.vshkl.easepic.ui.utils.ErrorUtils;
 import by.vshkl.easepic.ui.utils.PreferenceUtils;
 import by.vshkl.easepic.ui.view.MarqueeToolbar;
 
-public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, OnPictureClickListener, OnAlbumNameEditedListener {
+public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, OnPictureClickListener,
+        OnAlbumNameEditedListener {
 
     public static final String EXTRA_STORAGE_TYPE = "EXTRA_STORAGE_TYPE";
     public static final String EXTRA_ALBUM_ID = "EXTRA_ALBUM_ID";
