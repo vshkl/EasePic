@@ -11,4 +11,6 @@ public interface Repository {
     Observable<List<Album>> getAlbums();
 
     Observable<List<Picture>> getPictures(Album.StorageType storageType, String albumId);
+
+    Observable<List<Picture>> getPictures(String picturesRootPath);
 }
