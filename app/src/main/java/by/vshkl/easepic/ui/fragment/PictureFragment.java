@@ -1,9 +1,11 @@
 package by.vshkl.easepic.ui.fragment;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +31,7 @@ public class PictureFragment extends Fragment {
     @BindView(R.id.iv_picture)
     BigImageView ivPicture;
 
+    private WeakReference<PicturesPagerActivity> activityRef;
     private Unbinder unbinder;
     private boolean isShown = true;
 
@@ -40,6 +43,14 @@ public class PictureFragment extends Fragment {
         fragment.setArguments(arguments);
 
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof PicturesPagerActivity) {
+            activityRef = new WeakReference<>((PicturesPagerActivity) context);
+        }
     }
 
     @Nullable
@@ -63,44 +74,56 @@ public class PictureFragment extends Fragment {
         unbinder.unbind();
     }
 
-    @OnClick(R.id.iv_picture)
-    void onClick() {
-        handleUiVisibility();
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (activityRef != null) {
+            activityRef.clear();
+        }
     }
 
     //------------------------------------------------------------------------------------------------------------------
 
-    private void handleUiVisibility() {
-        final WeakReference<PicturesPagerActivity> activityRef =
-                new WeakReference<>((PicturesPagerActivity) getActivity());
-        final WeakReference<View> decorViewRef =
-                new WeakReference<>(activityRef.get().getWindow().getDecorView());
-
-        decorViewRef.get().setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-            @Override
-            public void onSystemUiVisibilityChange(int visibility) {
-                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                    activityRef.get()
-                            .getToolbar()
-                            .animate()
-                            .translationY(0)
-                            .setInterpolator(new DecelerateInterpolator());
-                } else {
-                    activityRef.get()
-                            .getToolbar()
-                            .animate()
-                            .translationY(-activityRef.get().getToolbar().getHeight())
-                            .setInterpolator(new AccelerateInterpolator());
-                }
-            }
-        });
-
+    @OnClick(R.id.iv_picture)
+    void onClick() {
         if (isShown) {
-            decorViewRef.get().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+            hideUi();
             isShown = false;
         } else {
-            decorViewRef.get().setSystemUiVisibility(View.VISIBLE);
+            showUi();
             isShown = true;
         }
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    private void hideUi() {
+        activityRef.get().getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
+        activityRef.get().getToolbar()
+                .animate()
+                .translationY(-dpToPx(80))
+                .setInterpolator(new AccelerateInterpolator());
+    }
+
+    private void showUi() {
+        activityRef.get().getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        activityRef.get().getToolbar()
+                .animate()
+                .translationY(0)
+                .setInterpolator(new DecelerateInterpolator());
+    }
+
+    private int dpToPx(int dp) {
+        DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
+        return Math.round(dp * (displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 }

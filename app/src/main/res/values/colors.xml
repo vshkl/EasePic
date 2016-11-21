@@ -11,6 +11,7 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorSemiTransparent">#80000000</color>
     <color name="colorTransparent">#00000000</color>
+    <color name="colorToolbarTransparent">#65000000</color>
     <!-- Buttons -->
     <color name="colorButtonNormal">#FFC107</color>
     <color name="colorButtonPressed">#FFA000</color>
