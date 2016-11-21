@@ -31,7 +31,7 @@ public class PicturesPagerAdapter extends FragmentPagerAdapter {
         this.pictureList = pictureList;
     }
 
-    public Picture getPicture(int position) {
-        return pictureList.get(position);
+    public String getPictureName(int position) {
+        return pictureList.get(position).getName();
     }
 }

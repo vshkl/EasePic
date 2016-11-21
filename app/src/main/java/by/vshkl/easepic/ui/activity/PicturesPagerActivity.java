@@ -3,6 +3,7 @@ package by.vshkl.easepic.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -17,7 +18,7 @@ import by.vshkl.easepic.ui.common.DepthPageTransformer;
 import by.vshkl.easepic.ui.view.MarqueeToolbar;
 import by.vshkl.easepic.ui.view.SwipeBackLayout;
 
-public class PicturesPagerActivity extends MvpSwipeBackActivity {
+public class PicturesPagerActivity extends MvpSwipeBackActivity implements OnPageChangeListener {
 
     public static final String EXTRA_POSITION = "EXTRA_POSITION";
     public static final String EXTRA_PICTURE_LIST = "EXTRA_PICTURE_LIST";
@@ -30,6 +31,8 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity {
     ViewPager vpPictures;
     @BindView(R.id.swipe_back_layout)
     SwipeBackLayout swipeBackLayout;
+
+    PicturesPagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +49,7 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity {
             int position = intent.getIntExtra(EXTRA_POSITION, -1);
             List<Picture> pictureList = intent.getParcelableArrayListExtra(EXTRA_PICTURE_LIST);
 
-            PicturesPagerAdapter adapter = new PicturesPagerAdapter(getSupportFragmentManager());
+            adapter = new PicturesPagerAdapter(getSupportFragmentManager());
             adapter.setPictureList(pictureList);
 
             vpPictures.setAdapter(adapter);
@@ -56,6 +59,18 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity {
 
         setDragEdge(SwipeBackLayout.DragEdge.TOP);
         swipeBackLayout.setScrollChild(vpPictures);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        vpPictures.addOnPageChangeListener(PicturesPagerActivity.this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        vpPictures.removeOnPageChangeListener(PicturesPagerActivity.this);
     }
 
     @Override
@@ -73,6 +88,25 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        toolbar.setTitle(adapter.getPictureName(position));
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
 
     public MarqueeToolbar getToolbar() {
         return toolbar;

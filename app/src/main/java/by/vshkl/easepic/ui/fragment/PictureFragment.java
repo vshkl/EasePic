@@ -24,7 +24,7 @@ import by.vshkl.easepic.ui.activity.PicturesPagerActivity;
 
 public class PictureFragment extends Fragment {
 
-    private static final String ARG_PICTURE = "ARG_POSITION";
+    private static final String ARG_PICTURE = "ARG_PICTURE";
 
     @BindView(R.id.iv_picture)
     BigImageView ivPicture;
@@ -52,8 +52,6 @@ public class PictureFragment extends Fragment {
         if (bundle != null) {
             Picture picture = bundle.getParcelable(ARG_PICTURE);
             ivPicture.showImage(new Uri.Builder().scheme("file").path(picture.getPath()).build());
-            ((PicturesPagerActivity) getActivity()).getToolbar().setTitle(picture.getName());
-            System.out.println(picture.getName());
         }
 
         return view;
