@@ -6,6 +6,7 @@ import android.os.Parcelable;
 public class Picture implements Parcelable {
 
     private String id;
+    private String date;
     private String name;
     private String path;
 
@@ -14,6 +15,7 @@ public class Picture implements Parcelable {
 
     protected Picture(Parcel in) {
         id = in.readString();
+        date = in.readString();
         name = in.readString();
         path = in.readString();
     }
@@ -36,6 +38,14 @@ public class Picture implements Parcelable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getName() {
@@ -88,6 +98,7 @@ public class Picture implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(id);
+        parcel.writeString(date);
         parcel.writeString(name);
         parcel.writeString(path);
     }

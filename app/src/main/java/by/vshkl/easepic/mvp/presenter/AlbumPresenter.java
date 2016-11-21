@@ -40,8 +40,6 @@ public class AlbumPresenter extends MvpPresenter<AlbumView> {
     }
 
     public void getPictures() {
-        System.out.println(storageType);
-        System.out.println(albumId);
         disposable = repository.getPictures(storageType, albumId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())

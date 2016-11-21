@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">EasePic</string>
 
+    <string name="menu_rename">Rename</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_sort">Sort</string>
     <string name="menu_sort_by_date">By date</string>
@@ -13,12 +14,19 @@
     <string name="error_no_pictures">No pictures found</string>
     <string name="error_get_albums">Failed to get albums</string>
     <string name="error_get_pictures">Failed to get pictures</string>
-
-    <string name="ok">Ok</string>
+    <string name="error_album_rename_failed">Failed to rename album</string>
 
     <!-- Preferences -->
-    <string name="key_sort_order">by.vshkl.easepic.SORT_ORDER</string>
-    <string name="value_sort_order_by_date">by.vshkl.easepic.SORT_ORDER_BY_DATE</string>
-    <string name="value_sort_order_by_name">by.vshkl.easepic.SORT_ORDER_BY_NAME</string>
+    <string name="key_sort_order_albums">by.vshkl.easepic.SORT_ORDER.ALBUMS</string>
+    <string name="value_sort_order_by_date_albums">by.vshkl.easepic.SORT_ORDER_BY_DATE.ALBUMS</string>
+    <string name="value_sort_order_by_name_albums">by.vshkl.easepic.SORT_ORDER_BY_NAME.ALBUMS</string>
+    <string name="key_sort_order_album">by.vshkl.easepic.SORT_ORDER.ALBUM</string>
+    <string name="value_sort_order_by_date_album">by.vshkl.easepic.SORT_ORDER_BY_DATE.ALBUM</string>
+    <string name="value_sort_order_by_name_album">by.vshkl.easepic.SORT_ORDER_BY_NAME.ALBUM</string>
+
+    <!-- Dialog -->
+    <string name="dialog_album_edit_title">Rename album</string>
+    <string name="dialog_album_edit_hint">Album name</string>
+    <string name="dialog_album_edit_error">Album name can\'t be empty</string>
 
 </resources>

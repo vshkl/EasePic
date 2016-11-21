@@ -3,11 +3,8 @@ package by.vshkl.easepic.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-
-import com.arellomobile.mvp.MvpAppCompatActivity;
 
 import java.util.List;
 
@@ -18,8 +15,9 @@ import by.vshkl.easepic.mvp.model.Picture;
 import by.vshkl.easepic.ui.adapter.PicturesPagerAdapter;
 import by.vshkl.easepic.ui.common.DepthPageTransformer;
 import by.vshkl.easepic.ui.view.MarqueeToolbar;
+import by.vshkl.easepic.ui.view.SwipeBackLayout;
 
-public class PicturesPagerActivity extends MvpAppCompatActivity {
+public class PicturesPagerActivity extends MvpSwipeBackActivity {
 
     public static final String EXTRA_POSITION = "EXTRA_POSITION";
     public static final String EXTRA_PICTURE_LIST = "EXTRA_PICTURE_LIST";
@@ -30,6 +28,8 @@ public class PicturesPagerActivity extends MvpAppCompatActivity {
     MarqueeToolbar toolbar;
     @BindView(R.id.vp_pictures)
     ViewPager vpPictures;
+    @BindView(R.id.swipe_back_layout)
+    SwipeBackLayout swipeBackLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +53,9 @@ public class PicturesPagerActivity extends MvpAppCompatActivity {
             vpPictures.setCurrentItem(position);
             vpPictures.setPageTransformer(true, new DepthPageTransformer());
         }
+
+        setDragEdge(SwipeBackLayout.DragEdge.TOP);
+        swipeBackLayout.setScrollChild(vpPictures);
     }
 
     @Override
@@ -71,7 +74,7 @@ public class PicturesPagerActivity extends MvpAppCompatActivity {
         }
     }
 
-    public Toolbar getToolbar() {
+    public MarqueeToolbar getToolbar() {
         return toolbar;
     }
 }

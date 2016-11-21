@@ -104,8 +104,5 @@ public class PictureFragment extends Fragment {
             decorViewRef.get().setSystemUiVisibility(View.VISIBLE);
             isShown = true;
         }
-
-        activityRef.clear();
-        decorViewRef.clear();
     }
 }

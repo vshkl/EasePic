@@ -1,5 +1,6 @@
 package by.vshkl.easepic.repository;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -27,8 +28,8 @@ public class LocalRepository implements Repository {
     @Override
     public Observable<List<Album>> getAlbums() {
         final String[] projection = {
-                MediaStore.Images.Media.DATE_MODIFIED,
                 MediaStore.Images.Media.BUCKET_ID,
+                MediaStore.Images.Media.DATE_MODIFIED,
                 MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
                 MediaStore.Images.Media.DATA};
         final String sortOrder = MediaStore.Images.Media.DATE_MODIFIED + " DESC";
@@ -48,8 +49,8 @@ public class LocalRepository implements Repository {
     public Observable<List<Picture>> getPictures(final Album.StorageType storageType, String albumId) {
         final String[] projection = {
                 MediaStore.Images.Media._ID,
-                MediaStore.Images.Media.DISPLAY_NAME,
                 MediaStore.Images.Media.DATE_MODIFIED,
+                MediaStore.Images.Media.DISPLAY_NAME,
                 MediaStore.Images.Media.DATA};
         final String selectionClause = MediaStore.Images.Media.BUCKET_ID + " = ?";
         final String[] selectionArgs = {albumId};
@@ -143,12 +144,14 @@ public class LocalRepository implements Repository {
             pictureList = new ArrayList<>(cursor.getCount());
 
             int indexPictureId = cursor.getColumnIndex(MediaStore.Images.Media._ID);
+            int indexPictureDate = cursor.getColumnIndex(MediaStore.Images.Media.DATE_MODIFIED);
             int indexPictureName = cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME);
             int indexPictureData = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
 
             while (cursor.moveToNext()) {
                 Picture picture = new Picture();
                 picture.setId(cursor.getString(indexPictureId));
+                picture.setDate(cursor.getString(indexPictureDate));
                 picture.setName(cursor.getString(indexPictureName));
                 picture.setPath(cursor.getString(indexPictureData));
                 pictureList.add(picture);
