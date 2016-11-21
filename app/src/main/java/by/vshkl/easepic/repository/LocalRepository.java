@@ -67,41 +67,6 @@ public class LocalRepository implements Repository {
         });
     }
 
-    @Override
-    public Observable<Boolean> updateAlbumName(final Album.StorageType storageType, final String albumId,
-                                               final String albumNewName) {
-        return Observable.create(new ObservableOnSubscribe<Boolean>() {
-            @Override
-            public void subscribe(ObservableEmitter<Boolean> emitter) throws Exception {
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(MediaStore.Images.Media.BUCKET_DISPLAY_NAME, albumNewName);
-
-                Uri storageUri = MediaStore.Images.Media.INTERNAL_CONTENT_URI;
-                if (storageType.equals(Album.StorageType.EXTERNAL)) {
-                    if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
-                        storageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                    }
-                }
-
-                int result = 0;
-                if (albumId != null) {
-                    try {
-                        context.get().getContentResolver().update(
-                                storageUri,
-                                contentValues,
-                                MediaStore.Images.Media.BUCKET_ID + "= ?",
-                                new String[]{albumId});
-
-                        emitter.onNext(true);
-                    } catch (IllegalArgumentException e) {
-                        e.printStackTrace();
-                        emitter.onNext(false);
-                    }
-                }
-            }
-        });
-    }
-
     //------------------------------------------------------------------------------------------------------------------
 
     private List<Album> getAlbumsFromInternalStorage(Context context, String[] projection, String sortOrder) {

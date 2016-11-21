@@ -30,7 +30,6 @@ import by.vshkl.easepic.mvp.view.AlbumView;
 import by.vshkl.easepic.ui.adapter.AlbumAdapter;
 import by.vshkl.easepic.ui.adapter.AlbumAdapter.OnPictureClickListener;
 import by.vshkl.easepic.ui.listener.OnAlbumNameEditedListener;
-import by.vshkl.easepic.ui.utils.DialogUtils;
 import by.vshkl.easepic.ui.utils.ErrorUtils;
 import by.vshkl.easepic.ui.utils.PreferenceUtils;
 import by.vshkl.easepic.ui.view.MarqueeToolbar;
@@ -132,10 +131,10 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
                 invalidateOptionsMenu();
                 sortAndSetPicturesList(albumAdapter.getPictureList());
                 return true;
-            case R.id.action_rename:
-                DialogUtils.showAlbumRenameDialog(AlbumActivity.this, getLayoutInflater(), AlbumActivity.this,
-                        toolbar.getTitle().toString());
-                return true;
+//            case R.id.action_rename:
+//                DialogUtils.showAlbumRenameDialog(AlbumActivity.this, getLayoutInflater(), AlbumActivity.this,
+//                        toolbar.getTitle().toString());
+//                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -145,12 +144,6 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
     @Override
     public void showPictures(List<Picture> pictureList) {
         sortAndSetPicturesList(pictureList);
-    }
-
-    @Override
-    public void showUpdatedAlbumName(String newAlbumName) {
-        toolbar.setTitle(newAlbumName);
-        setSupportActionBar(toolbar);
     }
 
     @Override
@@ -191,8 +184,7 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
 
     @Override
     public void onAlbumNameEdited(String newName) {
-        albumPresenter.setNewAlbumName(newName);
-        albumPresenter.updateAlbumName();
+        //TODO: Implement album rename
     }
 
     //------------------------------------------------------------------------------------------------------------------

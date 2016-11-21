@@ -11,6 +11,4 @@ public interface Repository {
     Observable<List<Album>> getAlbums();
 
     Observable<List<Picture>> getPictures(Album.StorageType storageType, String albumId);
-
-    Observable<Boolean> updateAlbumName(Album.StorageType storageType, String albumId, String albumNewName);
 }
