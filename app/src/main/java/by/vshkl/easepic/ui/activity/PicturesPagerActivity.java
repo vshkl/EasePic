@@ -1,12 +1,14 @@
 package by.vshkl.easepic.ui.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -46,15 +48,19 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements OnPag
 
         Intent intent = getIntent();
         if (intent != null) {
-            int position = intent.getIntExtra(EXTRA_POSITION, -1);
-            List<Picture> pictureList = intent.getParcelableArrayListExtra(EXTRA_PICTURE_LIST);
+            if (Intent.ACTION_VIEW.equals(intent.getAction()) && intent.getType().startsWith("image/")) {
+                handleOpenImage(intent.getData());
+            } else {
+                int position = intent.getIntExtra(EXTRA_POSITION, -1);
+                List<Picture> pictureList = intent.getParcelableArrayListExtra(EXTRA_PICTURE_LIST);
 
-            adapter = new PicturesPagerAdapter(getSupportFragmentManager());
-            adapter.setPictureList(pictureList);
+                adapter = new PicturesPagerAdapter(getSupportFragmentManager());
+                adapter.setPictureList(pictureList);
 
-            vpPictures.setAdapter(adapter);
-            vpPictures.setCurrentItem(position);
-            vpPictures.setPageTransformer(true, new DepthPageTransformer());
+                vpPictures.setAdapter(adapter);
+                vpPictures.setCurrentItem(position);
+                vpPictures.setPageTransformer(true, new DepthPageTransformer());
+            }
         }
 
         setDragEdge(SwipeBackLayout.DragEdge.TOP);
@@ -105,5 +111,17 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements OnPag
 
     public MarqueeToolbar getToolbar() {
         return toolbar;
+    }
+
+    private void handleOpenImage(Uri pictureUri) {
+        Picture picture = new Picture();
+        picture.setPath(pictureUri.getPath());
+        picture.setName(pictureUri.toString().substring(pictureUri.toString().lastIndexOf("/") + 1));
+
+        adapter = new PicturesPagerAdapter(getSupportFragmentManager());
+        adapter.setPictureList(Collections.singletonList(picture));
+
+        vpPictures.setAdapter(adapter);
+        vpPictures.setCurrentItem(0);
     }
 }
