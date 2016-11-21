@@ -8,19 +8,22 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.MenuItem;
 import android.view.View;
 
-import java.util.Collections;
+import com.arellomobile.mvp.presenter.InjectPresenter;
+
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import by.vshkl.easepic.R;
 import by.vshkl.easepic.mvp.model.Picture;
+import by.vshkl.easepic.mvp.presenter.PicturesPagerPresenter;
+import by.vshkl.easepic.mvp.view.PicturesPagerView;
 import by.vshkl.easepic.ui.adapter.PicturesPagerAdapter;
 import by.vshkl.easepic.ui.common.DepthPageTransformer;
 import by.vshkl.easepic.ui.view.MarqueeToolbar;
 import by.vshkl.easepic.ui.view.SwipeBackLayout;
 
-public class PicturesPagerActivity extends MvpSwipeBackActivity implements OnPageChangeListener {
+public class PicturesPagerActivity extends MvpSwipeBackActivity implements PicturesPagerView, OnPageChangeListener {
 
     public static final String EXTRA_POSITION = "EXTRA_POSITION";
     public static final String EXTRA_PICTURE_LIST = "EXTRA_PICTURE_LIST";
@@ -33,6 +36,9 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements OnPag
     ViewPager vpPictures;
     @BindView(R.id.swipe_back_layout)
     SwipeBackLayout swipeBackLayout;
+
+    @InjectPresenter
+    PicturesPagerPresenter picturesPagerPresenter;
 
     PicturesPagerAdapter adapter;
 
@@ -93,6 +99,23 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements OnPag
     //------------------------------------------------------------------------------------------------------------------
 
     @Override
+    public void showPictures(final List<Picture> pictureList, final int position) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                adapter = new PicturesPagerAdapter(getSupportFragmentManager());
+                adapter.setPictureList(pictureList);
+
+                vpPictures.setAdapter(adapter);
+                vpPictures.setCurrentItem(position);
+            }
+        });
+    }
+
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         toolbar.setTitle(adapter.getPictureName(position));
     }
@@ -114,14 +137,20 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements OnPag
     }
 
     private void handleOpenImage(Uri pictureUri) {
-        Picture picture = new Picture();
-        picture.setPath(pictureUri.getPath());
-        picture.setName(pictureUri.toString().substring(pictureUri.toString().lastIndexOf("/") + 1));
+        String path = pictureUri.getPath();
+        picturesPagerPresenter.setPicturesRootPath(path.substring(0, path.lastIndexOf("/")));
+        picturesPagerPresenter.setPictureFullPath(path);
+        picturesPagerPresenter.getPictures(PicturesPagerActivity.this);
 
-        adapter = new PicturesPagerAdapter(getSupportFragmentManager());
-        adapter.setPictureList(Collections.singletonList(picture));
 
-        vpPictures.setAdapter(adapter);
-        vpPictures.setCurrentItem(0);
+//        Picture picture = new Picture();
+//        picture.setPath(pictureUri.getPath());
+//        picture.setName(pictureUri.toString().substring(pictureUri.toString().lastIndexOf("/") + 1));
+//
+//        adapter = new PicturesPagerAdapter(getSupportFragmentManager());
+//        adapter.setPictureList(Collections.singletonList(picture));
+//
+//        vpPictures.setAdapter(adapter);
+//        vpPictures.setCurrentItem(0);
     }
 }
