@@ -1,9 +1,9 @@
 package by.vshkl.easepic.repository;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 
 import java.lang.ref.WeakReference;
@@ -62,6 +62,36 @@ public class LocalRepository implements Repository {
                 List<Picture> pictureList = new ArrayList<>();
                 pictureList.addAll(getPicturesFromStorage(
                         context.get(), storageType, projection, selectionClause, selectionArgs, sortOrder));
+                emitter.onNext(pictureList);
+            }
+        });
+    }
+
+    @Override
+    public Observable<List<Picture>> getPictures(final String picturesRootPath) {
+        final String[] projection = {
+                MediaStore.Images.Media._ID,
+                MediaStore.Images.Media.DATE_MODIFIED,
+                MediaStore.Images.Media.DISPLAY_NAME,
+                MediaStore.Images.Media.DATA};
+        final String selectionClause = MediaStore.Images.Media.DATA + " LIKE ?";
+        final String[] selectionArgs = {"%" + picturesRootPath + "%"};
+        final String sortOrder = MediaStore.Images.Media.DATE_MODIFIED + " DESC";
+
+        return Observable.create(new ObservableOnSubscribe<List<Picture>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<Picture>> emitter) throws Exception {
+                List<Picture> pictureList;
+
+                if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)
+                        && picturesRootPath.startsWith(Environment.getExternalStorageDirectory().getAbsolutePath())) {
+                    pictureList = getPicturesFromStorage(context.get(), MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                            projection, selectionClause, selectionArgs, sortOrder);
+                } else {
+                    pictureList = getPicturesFromStorage(context.get(), MediaStore.Images.Media.INTERNAL_CONTENT_URI,
+                            projection, selectionClause, selectionArgs, sortOrder);
+                }
+
                 emitter.onNext(pictureList);
             }
         });
@@ -130,6 +160,11 @@ public class LocalRepository implements Repository {
             }
         }
 
+        return getPicturesFromStorage(context, storageUri, projection, selectionClause, selectionArgs, sortOrder);
+    }
+
+    private List<Picture> getPicturesFromStorage(Context context, Uri storageUri, String[] projection,
+                                                 String selectionClause, String[] selectionArgs, String sortOrder) {
         Cursor cursor = context.getContentResolver().query(
                 storageUri,
                 projection,
