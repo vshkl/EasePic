@@ -169,8 +169,6 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements Pictu
     }
 
     private void handleShareAction() {
-        String path = adapter.getPicturePath(vpPictures.getCurrentItem());
-
         File file = new File(adapter.getPicturePath(vpPictures.getCurrentItem()));
         Uri uri = FileProvider.getUriForFile(PicturesPagerActivity.this, "by.vshkl.fileprovider", file);
 
