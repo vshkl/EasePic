@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -20,7 +21,7 @@ import by.vshkl.easepic.mvp.presenter.PicturesPagerPresenter;
 import by.vshkl.easepic.mvp.view.PicturesPagerView;
 import by.vshkl.easepic.ui.adapter.PicturesPagerAdapter;
 import by.vshkl.easepic.ui.common.DepthPageTransformer;
-import by.vshkl.easepic.ui.view.MarqueeToolbar;
+import by.vshkl.easepic.ui.view.MarqueeTextView;
 import by.vshkl.easepic.ui.view.SwipeBackLayout;
 
 public class PicturesPagerActivity extends MvpSwipeBackActivity implements PicturesPagerView, OnPageChangeListener {
@@ -31,7 +32,9 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements Pictu
     @BindView(R.id.root)
     View rootView;
     @BindView(R.id.toolbar)
-    MarqueeToolbar toolbar;
+    Toolbar toolbar;
+    @BindView(R.id.tv_toolbar)
+    MarqueeTextView tvToolbar;
     @BindView(R.id.vp_pictures)
     ViewPager vpPictures;
     @BindView(R.id.swipe_back_layout)
@@ -40,7 +43,7 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements Pictu
     @InjectPresenter
     PicturesPagerPresenter picturesPagerPresenter;
 
-    PicturesPagerAdapter adapter;
+    private PicturesPagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,16 +111,16 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements Pictu
 
                 vpPictures.setAdapter(adapter);
                 vpPictures.setCurrentItem(position);
+                vpPictures.setPageTransformer(true, new DepthPageTransformer());
             }
         });
     }
-
 
     //------------------------------------------------------------------------------------------------------------------
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        toolbar.setTitle(adapter.getPictureName(position));
+        tvToolbar.setText(adapter.getPictureName(position));
     }
 
     @Override
@@ -132,7 +135,7 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements Pictu
 
     //------------------------------------------------------------------------------------------------------------------
 
-    public MarqueeToolbar getToolbar() {
+    public Toolbar getToolbar() {
         return toolbar;
     }
 
@@ -141,16 +144,5 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements Pictu
         picturesPagerPresenter.setPicturesRootPath(path.substring(0, path.lastIndexOf("/")));
         picturesPagerPresenter.setPictureFullPath(path);
         picturesPagerPresenter.getPictures(PicturesPagerActivity.this);
-
-
-//        Picture picture = new Picture();
-//        picture.setPath(pictureUri.getPath());
-//        picture.setName(pictureUri.toString().substring(pictureUri.toString().lastIndexOf("/") + 1));
-//
-//        adapter = new PicturesPagerAdapter(getSupportFragmentManager());
-//        adapter.setPictureList(Collections.singletonList(picture));
-//
-//        vpPictures.setAdapter(adapter);
-//        vpPictures.setCurrentItem(0);
     }
 }

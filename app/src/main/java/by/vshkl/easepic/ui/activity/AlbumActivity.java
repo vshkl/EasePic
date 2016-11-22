@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,7 +33,7 @@ import by.vshkl.easepic.ui.adapter.AlbumAdapter.OnPictureClickListener;
 import by.vshkl.easepic.ui.listener.OnAlbumNameEditedListener;
 import by.vshkl.easepic.ui.utils.ErrorUtils;
 import by.vshkl.easepic.ui.utils.PreferenceUtils;
-import by.vshkl.easepic.ui.view.MarqueeToolbar;
+import by.vshkl.easepic.ui.view.MarqueeTextView;
 
 public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, OnPictureClickListener,
         OnAlbumNameEditedListener {
@@ -42,7 +43,9 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
     public static final String EXTRA_ALBUM_NAME = "EXTRA_ALBUM_NAME";
 
     @BindView(R.id.toolbar)
-    MarqueeToolbar toolbar;
+    Toolbar toolbar;
+    @BindView(R.id.tv_toolbar)
+    MarqueeTextView tvToolbar;
     @BindView(R.id.pb_loading)
     ProgressBar pbLoading;
     @BindView(R.id.rv_gallery)
@@ -56,14 +59,14 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gallery);
+        setContentView(R.layout.activity_album);
         ButterKnife.bind(AlbumActivity.this);
 
-        Intent intent = getIntent();
-
-        toolbar.setTitle(intent.getStringExtra(EXTRA_ALBUM_NAME));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Intent intent = getIntent();
+        tvToolbar.setText(intent.getStringExtra(EXTRA_ALBUM_NAME));
 
         initializePresenter(
                 (Album.StorageType) intent.getSerializableExtra(EXTRA_STORAGE_TYPE),
@@ -131,10 +134,6 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
                 invalidateOptionsMenu();
                 sortAndSetPicturesList(albumAdapter.getPictureList());
                 return true;
-//            case R.id.action_rename:
-//                DialogUtils.showAlbumRenameDialog(AlbumActivity.this, getLayoutInflater(), AlbumActivity.this,
-//                        toolbar.getTitle().toString());
-//                return true;
         }
         return super.onOptionsItemSelected(item);
     }
