@@ -9,8 +9,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
+import android.widget.GridLayout;
+import android.widget.TextView;
 
 import by.vshkl.easepic.R;
+import by.vshkl.easepic.mvp.model.PictureInfo;
 import by.vshkl.easepic.ui.listener.OnAlbumNameEditedListener;
 
 public class DialogUtils {
@@ -49,7 +52,7 @@ public class DialogUtils {
         });
 
         new AlertDialog.Builder(context)
-                .setTitle(context.getString(R.string.dialog_album_edit_title))
+                .setTitle(context.getString(R.string.dialog_picture_details_title))
                 .setView(container)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
@@ -59,9 +62,33 @@ public class DialogUtils {
                         }
                     }
                 })
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                .create()
+                .show();
+    }
+
+    public static void showPictureDetailsDialog(Context context, PictureInfo pictureInfo) {
+        final GridLayout container = (GridLayout) FrameLayout.inflate(context, R.layout.dialog_picture_details, null);
+
+        final TextView tvPath = (TextView) container.findViewById(R.id.tv_path);
+        final TextView tvMimetype = (TextView) container.findViewById(R.id.tv_mimetype);
+        final TextView tvSize = (TextView) container.findViewById(R.id.tv_size);
+        final TextView tvResolution = (TextView) container.findViewById(R.id.tv_resolution);
+        final TextView tvDate = (TextView) container.findViewById(R.id.tv_date);
+
+        tvPath.setText(pictureInfo.getPath());
+        tvMimetype.setText(pictureInfo.getMimeType());
+        tvSize.setText(FileSizeUtils.humanReadableByteCount(Long.valueOf(pictureInfo.getSize()), false));
+        tvResolution.setText(pictureInfo.getWidth() + "x" + pictureInfo.getHeight());
+        tvDate.setText(DateUtils.humanReadableDate(Long.valueOf(pictureInfo.getDate())));
+        System.out.println(pictureInfo.getDate());
+
+        new AlertDialog.Builder(context)
+                .setTitle(context.getString(R.string.dialog_picture_details_title))
+                .setView(container)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
                     }
                 })
                 .create()
