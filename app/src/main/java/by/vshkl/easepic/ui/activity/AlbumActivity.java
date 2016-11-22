@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import java.util.ArrayList;
@@ -34,8 +33,9 @@ import by.vshkl.easepic.ui.listener.OnAlbumNameEditedListener;
 import by.vshkl.easepic.ui.utils.ErrorUtils;
 import by.vshkl.easepic.ui.utils.PreferenceUtils;
 import by.vshkl.easepic.ui.view.MarqueeTextView;
+import by.vshkl.easepic.ui.view.SwipeBackLayout;
 
-public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, OnPictureClickListener,
+public class AlbumActivity extends MvpSwipeBackActivity implements AlbumView, OnPictureClickListener,
         OnAlbumNameEditedListener {
 
     public static final String EXTRA_STORAGE_TYPE = "EXTRA_STORAGE_TYPE";
@@ -50,6 +50,8 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
     ProgressBar pbLoading;
     @BindView(R.id.rv_gallery)
     RecyclerView rvGallery;
+    @BindView(R.id.swipe_back_layout)
+    SwipeBackLayout swipeBackLayout;
 
     @InjectPresenter
     AlbumPresenter albumPresenter;
@@ -73,6 +75,9 @@ public class AlbumActivity extends MvpAppCompatActivity implements AlbumView, On
                 intent.getStringExtra(EXTRA_ALBUM_ID));
 
         initializeRecyclerView();
+
+        setDragEdge(SwipeBackLayout.DragEdge.LEFT);
+        swipeBackLayout.setScrollChild(rvGallery);
     }
 
     @Override
