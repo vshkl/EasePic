@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -17,10 +18,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import by.vshkl.easepic.R;
 import by.vshkl.easepic.mvp.model.Picture;
+import by.vshkl.easepic.mvp.model.PictureInfo;
 import by.vshkl.easepic.mvp.presenter.PicturesPagerPresenter;
 import by.vshkl.easepic.mvp.view.PicturesPagerView;
 import by.vshkl.easepic.ui.adapter.PicturesPagerAdapter;
 import by.vshkl.easepic.ui.common.DepthPageTransformer;
+import by.vshkl.easepic.ui.utils.DialogUtils;
 import by.vshkl.easepic.ui.view.MarqueeTextView;
 import by.vshkl.easepic.ui.view.SwipeBackLayout;
 
@@ -89,10 +92,21 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements Pictu
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_image_viewer, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                return true;
+            case R.id.action_details:
+                picturesPagerPresenter.setPictureId(adapter.getPictureId(vpPictures.getCurrentItem()));
+                picturesPagerPresenter.setPictureFullPath(adapter.getPicturePath(vpPictures.getCurrentItem()));
+                picturesPagerPresenter.getPictureInfo(PicturesPagerActivity.this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -114,6 +128,11 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements Pictu
                 vpPictures.setPageTransformer(true, new DepthPageTransformer());
             }
         });
+    }
+
+    @Override
+    public void showPictureInfo(PictureInfo pictureInfo) {
+        DialogUtils.showPictureDetailsDialog(PicturesPagerActivity.this, pictureInfo);
     }
 
     //------------------------------------------------------------------------------------------------------------------
