@@ -18,6 +18,8 @@ public class SwipeBackLayout extends ViewGroup {
     private static final String TAG = "SwipeBackLayout";
 
     public enum DragEdge {
+        NONE,
+
         LEFT,
 
         TOP,
@@ -27,7 +29,7 @@ public class SwipeBackLayout extends ViewGroup {
         BOTTOM
     }
 
-    private DragEdge dragEdge = DragEdge.TOP;
+    private DragEdge dragEdge = DragEdge.NONE;
 
     public void setDragEdge(DragEdge dragEdge) {
         this.dragEdge = dragEdge;
@@ -84,11 +86,6 @@ public class SwipeBackLayout extends ViewGroup {
 
     private SwipeBackListener swipeBackListener;
 
-    @Deprecated
-    public void setOnPullToBackListener(SwipeBackListener listener) {
-        swipeBackListener = listener;
-    }
-
     public void setOnSwipeBackListener(SwipeBackListener listener) {
         swipeBackListener = listener;
     }
@@ -124,7 +121,6 @@ public class SwipeBackLayout extends ViewGroup {
                 } else {
                     scrollChild = target;
                 }
-
             }
         }
     }
@@ -153,7 +149,9 @@ public class SwipeBackLayout extends ViewGroup {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         int width = getMeasuredWidth();
         int height = getMeasuredHeight();
-        if (getChildCount() == 0) return;
+        if (getChildCount() == 0) {
+            return;
+        }
 
         View child = getChildAt(0);
 
@@ -187,6 +185,8 @@ public class SwipeBackLayout extends ViewGroup {
         horizontalDragRange = w;
 
         switch (dragEdge) {
+            case NONE:
+                break;
             case TOP:
             case BOTTOM:
                 finishAnchor = finishAnchor > 0 ? finishAnchor : verticalDragRange * BACK_FACTOR;
@@ -313,11 +313,12 @@ public class SwipeBackLayout extends ViewGroup {
 
         @Override
         public void onViewDragStateChanged(int state) {
-            if (state == draggingState) return;
+            if (state == draggingState) {
+                return;
+            }
 
             if ((draggingState == ViewDragHelper.STATE_DRAGGING || draggingState == ViewDragHelper.STATE_SETTLING) &&
                     state == ViewDragHelper.STATE_IDLE) {
-                // the view stopped from moving.
                 if (draggingOffset == getDragRange()) {
                     finish();
                 }
@@ -325,7 +326,6 @@ public class SwipeBackLayout extends ViewGroup {
 
             draggingState = state;
         }
-
 
         @Override
         public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
@@ -344,10 +344,14 @@ public class SwipeBackLayout extends ViewGroup {
 
             //The proportion of the sliding.
             float fractionAnchor = (float) draggingOffset / finishAnchor;
-            if (fractionAnchor >= 1) fractionAnchor = 1;
+            if (fractionAnchor >= 1) {
+                fractionAnchor = 1;
+            }
 
             float fractionScreen = (float) draggingOffset / (float) getDragRange();
-            if (fractionScreen >= 1) fractionScreen = 1;
+            if (fractionScreen >= 1) {
+                fractionScreen = 1;
+            }
 
             if (swipeBackListener != null) {
                 swipeBackListener.onViewPositionChanged(fractionAnchor, fractionScreen);
@@ -356,9 +360,13 @@ public class SwipeBackLayout extends ViewGroup {
 
         @Override
         public void onViewReleased(View releasedChild, float xvel, float yvel) {
-            if (draggingOffset == 0) return;
+            if (draggingOffset == 0) {
+                return;
+            }
 
-            if (draggingOffset == getDragRange()) return;
+            if (draggingOffset == getDragRange()) {
+                return;
+            }
 
             boolean isBack = false;
 
