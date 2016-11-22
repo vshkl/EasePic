@@ -7,35 +7,51 @@
     android:layout_height="match_parent"
     >
 
-    <android.support.design.widget.CoordinatorLayout
+    <FrameLayout
         android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorBlack"
         >
 
-        <by.vshkl.easepic.ui.view.SwipeBackLayout
+        <android.support.v4.view.ViewPager
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/vp_pictures"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            />
 
-            <android.support.v4.view.ViewPager
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/vp_pictures"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
-
-        </by.vshkl.easepic.ui.view.SwipeBackLayout>
-
-        <by.vshkl.easepic.ui.view.MarqueeToolbar
+        <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:layout_marginTop="24dp"
             android:background="@color/colorToolbarTransparent"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            android:layout_marginTop="24dp"
-            />
+            app:titleTextAppearance="@style/Toolbar.TitleText"
+            >
 
-    </android.support.design.widget.CoordinatorLayout>
+            <by.vshkl.easepic.ui.view.MarqueeTextView
+                android:id="@+id/tv_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center_vertical"
+                android:lines="1"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:requiresFadingEdge="vertical"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textColor="@color/colorToolbarText"
+                android:textSize="20sp"
+                />
+
+        </android.support.v7.widget.Toolbar>
+
+    </FrameLayout>
 
 </by.vshkl.easepic.ui.view.SwipeBackLayout>

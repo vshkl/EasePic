@@ -6,10 +6,69 @@
     android:layout_height="match_parent"
     >
 
-    <include
-        layout="@layout/activity_gallery"
+    <android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
+        android:fitsSystemWindows="true"
+        android:background="@color/colorBackgroundBack"
+        >
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            >
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:titleTextAppearance="@style/Toolbar.TitleText"
+                >
+
+                <by.vshkl.easepic.ui.view.MarqueeTextView
+                    android:id="@+id/tv_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center_vertical"
+                    android:layout_marginEnd="16dp"
+                    android:lines="1"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:requiresFadingEdge="vertical"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textColor="@color/colorToolbarText"
+                    android:textSize="20sp"
+                    />
+
+            </android.support.v7.widget.Toolbar>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v7.widget.RecyclerView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/rv_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            />
+
+        <ProgressBar
+            android:id="@+id/pb_loading"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            />
+
+    </android.support.design.widget.CoordinatorLayout>
 
 </by.vshkl.easepic.ui.view.SwipeBackLayout>
