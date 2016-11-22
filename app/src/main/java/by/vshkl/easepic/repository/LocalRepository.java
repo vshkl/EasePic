@@ -13,6 +13,7 @@ import java.util.List;
 
 import by.vshkl.easepic.mvp.model.Album;
 import by.vshkl.easepic.mvp.model.Picture;
+import by.vshkl.easepic.mvp.model.PictureInfo;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -97,6 +98,34 @@ public class LocalRepository implements Repository {
         });
     }
 
+    @Override
+    public Observable<PictureInfo> getPictureInfo(String pictureId, final String picturePath) {
+        final String[] projection = {
+                MediaStore.Images.Media._ID,
+                MediaStore.Images.Media.DATA,
+                MediaStore.Images.Media.MIME_TYPE,
+                MediaStore.Images.Media.SIZE,
+                MediaStore.Images.Media.WIDTH,
+                MediaStore.Images.Media.HEIGHT,
+                MediaStore.Images.Media.DATE_TAKEN};
+        final String selectionClause = MediaStore.Images.Media._ID + " = ?";
+        final String[] selectionArgs = {pictureId};
+
+        return Observable.create(new ObservableOnSubscribe<PictureInfo>() {
+            @Override
+            public void subscribe(ObservableEmitter<PictureInfo> emitter) throws Exception {
+                if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)
+                        && picturePath.startsWith(Environment.getExternalStorageDirectory().getAbsolutePath())) {
+                    emitter.onNext(getPictureInfo(context.get(), MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                            projection, selectionClause, selectionArgs));
+                } else {
+                    emitter.onNext(getPictureInfo(context.get(), MediaStore.Images.Media.INTERNAL_CONTENT_URI,
+                            projection, selectionClause, selectionArgs));
+                }
+            }
+        });
+    }
+
     //------------------------------------------------------------------------------------------------------------------
 
     private List<Album> getAlbumsFromInternalStorage(Context context, String[] projection, String sortOrder) {
@@ -116,8 +145,7 @@ public class LocalRepository implements Repository {
                 projection,
                 null,
                 null,
-                sortOrder
-        );
+                sortOrder);
 
         LinkedHashSet<Album> albumLinkedHashSet = null;
 
@@ -170,8 +198,7 @@ public class LocalRepository implements Repository {
                 projection,
                 selectionClause,
                 selectionArgs,
-                sortOrder
-        );
+                sortOrder);
 
         List<Picture> pictureList = null;
 
@@ -196,5 +223,38 @@ public class LocalRepository implements Repository {
         }
 
         return pictureList;
+    }
+
+    private PictureInfo getPictureInfo(Context context, Uri storageUri,
+                                       String[] projection, String selectionClause, String[] selectionArgs) {
+        Cursor cursor = context.getContentResolver().query(
+                storageUri,
+                projection,
+                selectionClause,
+                selectionArgs,
+                null);
+
+        PictureInfo pictureInfo = new PictureInfo();
+        if (cursor != null) {
+            int indexPicturePath = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
+            int indexPictureMimeType = cursor.getColumnIndex(MediaStore.Images.Media.MIME_TYPE);
+            int indexPictureSize = cursor.getColumnIndex(MediaStore.Images.Media.SIZE);
+            int indexPictureWidth = cursor.getColumnIndex(MediaStore.Images.Media.WIDTH);
+            int indexPictureHeight = cursor.getColumnIndex(MediaStore.Images.Media.HEIGHT);
+            int indexPictureDate = cursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN);
+
+            while (cursor.moveToNext()) {
+                pictureInfo.setPath(cursor.getString(indexPicturePath));
+                pictureInfo.setMimeType(cursor.getString(indexPictureMimeType));
+                pictureInfo.setSize(cursor.getString(indexPictureSize));
+                pictureInfo.setWidth(cursor.getString(indexPictureWidth));
+                pictureInfo.setHeight(cursor.getString(indexPictureHeight));
+                pictureInfo.setDate(cursor.getString(indexPictureDate));
+            }
+
+            cursor.close();
+        }
+
+        return pictureInfo;
     }
 }
