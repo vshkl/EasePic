@@ -103,6 +103,9 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements Pictu
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.action_share:
+                handleShareAction();
+                return true;
             case R.id.action_details:
                 picturesPagerPresenter.setPictureId(adapter.getPictureId(vpPictures.getCurrentItem()));
                 picturesPagerPresenter.setPictureFullPath(adapter.getPicturePath(vpPictures.getCurrentItem()));
@@ -163,5 +166,13 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements Pictu
         picturesPagerPresenter.setPicturesRootPath(path.substring(0, path.lastIndexOf("/")));
         picturesPagerPresenter.setPictureFullPath(path);
         picturesPagerPresenter.getPictures(PicturesPagerActivity.this);
+    }
+
+    private void handleShareAction() {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_STREAM, new Uri.Builder().scheme("file").appendPath(
+                adapter.getPicturePath(vpPictures.getCurrentItem())).build());
+        startActivity(Intent.createChooser(intent, getString(R.string.chooser_share_title)));
     }
 }

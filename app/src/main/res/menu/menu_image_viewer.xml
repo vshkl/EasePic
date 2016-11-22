@@ -7,11 +7,17 @@
     >
 
     <item
-        android:id="@+id/action_details"
+        android:id="@+id/action_share"
         android:orderInCategory="1"
+        android:title="@string/menu_share"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/action_details"
+        android:orderInCategory="2"
         android:title="@string/menu_details"
         app:showAsAction="never"
-        >
-    </item>
+        />
 
 </menu>

@@ -1,17 +1,22 @@
 <resources>
+    <!-- App name -->
     <string name="app_name">EasePic</string>
 
+    <!-- Menu -->
     <string name="menu_details">Details</string>
     <string name="menu_rename">Rename</string>
     <string name="menu_settings">Settings</string>
+    <string name="menu_share">Share</string>
     <string name="menu_sort">Sort</string>
     <string name="menu_sort_by_date">By date</string>
     <string name="menu_sort_by_name">By name</string>
 
+    <!-- Permissions -->
     <string name="permission_read_external_storage_rationale">Read external storage permission is needed to show gallery albums.</string>
     <string name="permission_read_external_storage_granted">Read external storage permission has been granted</string>
     <string name="permission_read_external_storage_not_granted">Read external storage permission were not granted.</string>
 
+    <!-- Errors -->
     <string name="error_no_pictures">No pictures found</string>
     <string name="error_get_albums">Failed to get albums</string>
     <string name="error_get_pictures">Failed to get pictures</string>
@@ -35,5 +40,8 @@
     <string name="dialog_album_edit_title">Rename album</string>
     <string name="dialog_album_edit_hint">Album name</string>
     <string name="dialog_album_edit_error">Album name can\'t be empty</string>
+
+    <!-- Chooser -->
+    <string name="chooser_share_title">Share image with...</string>
 
 </resources>
