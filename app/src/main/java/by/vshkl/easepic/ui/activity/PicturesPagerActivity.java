@@ -3,6 +3,7 @@ package by.vshkl.easepic.ui.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +13,7 @@ import android.view.View;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
+import java.io.File;
 import java.util.List;
 
 import butterknife.BindView;
@@ -167,10 +169,15 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements Pictu
     }
 
     private void handleShareAction() {
+        String path = adapter.getPicturePath(vpPictures.getCurrentItem());
+
+        File file = new File(adapter.getPicturePath(vpPictures.getCurrentItem()));
+        Uri uri = FileProvider.getUriForFile(PicturesPagerActivity.this, "by.vshkl.fileprovider", file);
+
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_STREAM, new Uri.Builder().scheme("file").appendPath(
-                adapter.getPicturePath(vpPictures.getCurrentItem())).build());
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+
         startActivity(Intent.createChooser(intent, getString(R.string.chooser_share_title)));
     }
 
