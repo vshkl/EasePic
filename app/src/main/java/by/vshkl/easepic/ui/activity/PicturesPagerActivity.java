@@ -107,9 +107,7 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements Pictu
                 handleShareAction();
                 return true;
             case R.id.action_details:
-                picturesPagerPresenter.setPictureId(adapter.getPictureId(vpPictures.getCurrentItem()));
-                picturesPagerPresenter.setPictureFullPath(adapter.getPicturePath(vpPictures.getCurrentItem()));
-                picturesPagerPresenter.getPictureInfo(PicturesPagerActivity.this);
+                handleViewDetailsAction();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -174,5 +172,11 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements Pictu
         intent.putExtra(Intent.EXTRA_STREAM, new Uri.Builder().scheme("file").appendPath(
                 adapter.getPicturePath(vpPictures.getCurrentItem())).build());
         startActivity(Intent.createChooser(intent, getString(R.string.chooser_share_title)));
+    }
+
+    private void handleViewDetailsAction() {
+        picturesPagerPresenter.setPictureId(adapter.getPictureId(vpPictures.getCurrentItem()));
+        picturesPagerPresenter.setPictureFullPath(adapter.getPicturePath(vpPictures.getCurrentItem()));
+        picturesPagerPresenter.getPictureInfo(PicturesPagerActivity.this);
     }
 }
