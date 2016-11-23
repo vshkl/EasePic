@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
@@ -27,6 +28,7 @@ import by.vshkl.easepic.ui.adapter.PicturesPagerAdapter;
 import by.vshkl.easepic.ui.common.DepthPageTransformer;
 import by.vshkl.easepic.ui.listener.OnDeleteConfirmedListener;
 import by.vshkl.easepic.ui.utils.DialogUtils;
+import by.vshkl.easepic.ui.utils.ErrorUtils;
 import by.vshkl.easepic.ui.view.MarqueeTextView;
 import by.vshkl.easepic.ui.view.SwipeBackLayout;
 
@@ -35,6 +37,8 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements Pictu
 
     public static final String EXTRA_POSITION = "EXTRA_POSITION";
     public static final String EXTRA_PICTURE_LIST = "EXTRA_PICTURE_LIST";
+
+    public static final int REQUEST_CODE = 43;
 
     @BindView(R.id.root)
     View rootView;
@@ -86,6 +90,7 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements Pictu
     @Override
     protected void onStart() {
         super.onStart();
+        picturesPagerPresenter.onStart(PicturesPagerActivity.this);
         vpPictures.addOnPageChangeListener(PicturesPagerActivity.this);
     }
 
@@ -93,6 +98,7 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements Pictu
     protected void onPause() {
         super.onPause();
         vpPictures.removeOnPageChangeListener(PicturesPagerActivity.this);
+        picturesPagerPresenter.onStop();
     }
 
     @Override
@@ -124,6 +130,16 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements Pictu
     //------------------------------------------------------------------------------------------------------------------
 
     @Override
+    public void showMessage(final String message) {
+        Toast.makeText(PicturesPagerActivity.this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showError(ErrorUtils.Error error) {
+        Toast.makeText(this, ErrorUtils.getMessageString(PicturesPagerActivity.this, error), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void showPictures(final List<Picture> pictureList, final int position) {
         runOnUiThread(new Runnable() {
             @Override
@@ -144,8 +160,14 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements Pictu
     }
 
     @Override
-    public void onDeleted(String pictureId) {
-        adapter.removePictureWithId(pictureId);
+    public void onDeleted(final String pictureId) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent();
+                setResult(RESULT_OK, intent);
+            }
+        });
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -178,9 +200,10 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements Pictu
 
     private void handleOpenImage(Uri pictureUri) {
         String path = pictureUri.getPath();
+        picturesPagerPresenter.onStart(PicturesPagerActivity.this);
         picturesPagerPresenter.setPicturesRootPath(path.substring(0, path.lastIndexOf("/")));
         picturesPagerPresenter.setPictureFullPath(path);
-        picturesPagerPresenter.getPictures(PicturesPagerActivity.this);
+        picturesPagerPresenter.getPictures();
     }
 
     private void handleShareAction() {
@@ -197,12 +220,12 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements Pictu
     private void handleViewDetailsAction() {
         picturesPagerPresenter.setPictureId(adapter.getPictureId(vpPictures.getCurrentItem()));
         picturesPagerPresenter.setPictureFullPath(adapter.getPicturePath(vpPictures.getCurrentItem()));
-        picturesPagerPresenter.getPictureInfo(PicturesPagerActivity.this);
+        picturesPagerPresenter.getPictureInfo();
     }
 
     private void handleDeleteAction() {
         picturesPagerPresenter.setPictureId(adapter.getPictureId(vpPictures.getCurrentItem()));
         picturesPagerPresenter.setPictureFullPath(adapter.getPicturePath(vpPictures.getCurrentItem()));
-        picturesPagerPresenter.deletePicture(PicturesPagerActivity.this);
+        picturesPagerPresenter.deletePicture();
     }
 }

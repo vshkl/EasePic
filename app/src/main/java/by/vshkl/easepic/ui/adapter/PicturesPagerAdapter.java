@@ -42,13 +42,4 @@ public class PicturesPagerAdapter extends FragmentPagerAdapter {
     public String getPicturePath(int position) {
         return pictureList.get(position).getPath();
     }
-
-    public void removePictureWithId(String pictureId) {
-        for (Picture picture : pictureList) {
-            if (picture.getId().equals(pictureId)) {
-                pictureList.remove(picture);
-            }
-        }
-        notifyDataSetChanged();
-    }
 }
