@@ -74,6 +74,33 @@ public class PicturesPagerPresenter extends MvpPresenter<PicturesPagerView> {
                 });
     }
 
+    public void deletePicture(Context context) {
+        Repository repository = new LocalRepository(context);
+
+        repository.deletePicture(pictureId, pictureFullPath)
+                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .onErrorReturn(new Function<Throwable, Boolean>() {
+                    @Override
+                    public Boolean apply(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
+                        return null;
+                    }
+                })
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+                        if (aBoolean) {
+                            //TODO: add message that picture deleted
+                        } else {
+                            //TODO: add message that picture delete failed
+                        }
+                    }
+                });
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
     public void setPicturesRootPath(String picturesRootPath) {
         this.picturesRootPath = picturesRootPath;
     }
