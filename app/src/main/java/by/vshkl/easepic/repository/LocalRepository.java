@@ -126,6 +126,30 @@ public class LocalRepository implements Repository {
         });
     }
 
+    @Override
+    public Observable<Boolean> deletePicture(String pictureId, final String picturePath) {
+        final String selectionClause = MediaStore.Images.Media._ID + " = ?";
+        final String[] selectionArgs = {pictureId};
+
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> emitter) throws Exception {
+                int deletedPictures = 0;
+
+                if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)
+                        && picturePath.startsWith(Environment.getExternalStorageDirectory().getAbsolutePath())) {
+                    deletedPictures = context.get().getContentResolver()
+                            .delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selectionClause, selectionArgs);
+                } else {
+                    deletedPictures = context.get().getContentResolver()
+                            .delete(MediaStore.Images.Media.INTERNAL_CONTENT_URI, selectionClause, selectionArgs);
+                }
+
+                emitter.onNext(deletedPictures > 0);
+            }
+        });
+    }
+
     //------------------------------------------------------------------------------------------------------------------
 
     private List<Album> getAlbumsFromInternalStorage(Context context, String[] projection, String sortOrder) {

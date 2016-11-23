@@ -16,4 +16,6 @@ public interface Repository {
     Observable<List<Picture>> getPictures(String picturesRootPath);
 
     Observable<PictureInfo> getPictureInfo(String pictureId, String picturePath);
+
+    Observable<Boolean> deletePicture(String pictureId, String picturePath);
 }
