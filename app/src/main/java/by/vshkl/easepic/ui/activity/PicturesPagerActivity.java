@@ -25,11 +25,13 @@ import by.vshkl.easepic.mvp.presenter.PicturesPagerPresenter;
 import by.vshkl.easepic.mvp.view.PicturesPagerView;
 import by.vshkl.easepic.ui.adapter.PicturesPagerAdapter;
 import by.vshkl.easepic.ui.common.DepthPageTransformer;
+import by.vshkl.easepic.ui.listener.OnDeleteConfirmedListener;
 import by.vshkl.easepic.ui.utils.DialogUtils;
 import by.vshkl.easepic.ui.view.MarqueeTextView;
 import by.vshkl.easepic.ui.view.SwipeBackLayout;
 
-public class PicturesPagerActivity extends MvpSwipeBackActivity implements PicturesPagerView, OnPageChangeListener {
+public class PicturesPagerActivity extends MvpSwipeBackActivity implements PicturesPagerView, OnPageChangeListener,
+        OnDeleteConfirmedListener {
 
     public static final String EXTRA_POSITION = "EXTRA_POSITION";
     public static final String EXTRA_PICTURE_LIST = "EXTRA_PICTURE_LIST";
@@ -111,6 +113,9 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements Pictu
             case R.id.action_details:
                 handleViewDetailsAction();
                 return true;
+            case R.id.action_delete:
+                DialogUtils.showDeleteConfirmationDialog(PicturesPagerActivity.this);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -138,6 +143,11 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements Pictu
         DialogUtils.showPictureDetailsDialog(PicturesPagerActivity.this, pictureInfo);
     }
 
+    @Override
+    public void onDeleted(String pictureId) {
+        adapter.removePictureWithId(pictureId);
+    }
+
     //------------------------------------------------------------------------------------------------------------------
 
     @Override
@@ -153,6 +163,11 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements Pictu
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    @Override
+    public void onDeleteConfirmed() {
+        handleDeleteAction();
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -183,5 +198,11 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements Pictu
         picturesPagerPresenter.setPictureId(adapter.getPictureId(vpPictures.getCurrentItem()));
         picturesPagerPresenter.setPictureFullPath(adapter.getPicturePath(vpPictures.getCurrentItem()));
         picturesPagerPresenter.getPictureInfo(PicturesPagerActivity.this);
+    }
+
+    private void handleDeleteAction() {
+        picturesPagerPresenter.setPictureId(adapter.getPictureId(vpPictures.getCurrentItem()));
+        picturesPagerPresenter.setPictureFullPath(adapter.getPicturePath(vpPictures.getCurrentItem()));
+        picturesPagerPresenter.deletePicture(PicturesPagerActivity.this);
     }
 }
