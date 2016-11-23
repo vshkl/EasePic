@@ -12,4 +12,6 @@ public interface PicturesPagerView extends MvpView {
     void showPictures(List<Picture> pictureList, int position);
 
     void showPictureInfo(PictureInfo pictureInfo);
+
+    void onDeleted(String pictureId);
 }
