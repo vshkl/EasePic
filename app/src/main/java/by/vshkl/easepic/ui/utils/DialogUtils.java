@@ -15,6 +15,7 @@ import android.widget.TextView;
 import by.vshkl.easepic.R;
 import by.vshkl.easepic.mvp.model.PictureInfo;
 import by.vshkl.easepic.ui.listener.OnAlbumNameEditedListener;
+import by.vshkl.easepic.ui.listener.OnDeleteConfirmedListener;
 
 public class DialogUtils {
 
@@ -86,6 +87,25 @@ public class DialogUtils {
                 .setTitle(context.getString(R.string.dialog_picture_details_title))
                 .setView(container)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    public static void showDeleteConfirmationDialog(final Context context) {
+        new AlertDialog.Builder(context)
+                .setMessage(context.getString(R.string.dialog_picture_delete_message))
+                .setPositiveButton(R.string.button_delete, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        ((OnDeleteConfirmedListener) context).onDeleteConfirmed();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
