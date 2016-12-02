@@ -166,6 +166,7 @@ public class PicturesPagerActivity extends MvpSwipeBackActivity implements Pictu
             public void run() {
                 Intent intent = new Intent();
                 setResult(RESULT_OK, intent);
+                finish();
             }
         });
     }

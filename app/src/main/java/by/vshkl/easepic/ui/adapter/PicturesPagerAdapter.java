@@ -2,14 +2,14 @@ package by.vshkl.easepic.ui.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.List;
 
 import by.vshkl.easepic.mvp.model.Picture;
 import by.vshkl.easepic.ui.fragment.PictureFragment;
 
-public class PicturesPagerAdapter extends FragmentPagerAdapter {
+public class PicturesPagerAdapter extends FragmentStatePagerAdapter {
 
     private List<Picture> pictureList;
 
