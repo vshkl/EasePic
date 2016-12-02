@@ -60,6 +60,15 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.PictureViewH
     }
 
     @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        if (onPictureClickListener != null) {
+            onPictureClickListener.clear();
+            onPictureClickListener = null;
+        }
+    }
+
+    @Override
     public int getItemCount() {
         return (pictureList != null) ? pictureList.size() : 0;
     }

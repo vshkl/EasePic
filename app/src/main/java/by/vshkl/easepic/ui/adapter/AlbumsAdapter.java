@@ -64,8 +64,12 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumsView
     }
 
     @Override
-    public void onViewRecycled(AlbumsViewHolder holder) {
-        super.onViewRecycled(holder);
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        if (onAlbumClickListener != null) {
+            onAlbumClickListener.clear();
+            onAlbumClickListener = null;
+        }
     }
 
     @Override

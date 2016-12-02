@@ -79,6 +79,7 @@ public class PictureFragment extends Fragment {
         super.onDetach();
         if (activityRef != null) {
             activityRef.clear();
+            activityRef = null;
         }
     }
 
