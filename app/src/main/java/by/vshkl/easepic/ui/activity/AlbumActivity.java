@@ -88,6 +88,14 @@ public class AlbumActivity extends MvpSwipeBackActivity implements AlbumView, On
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PicturesPagerActivity.REQUEST_CODE && resultCode == RESULT_OK) {
+            albumPresenter.getPictures();
+        }
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         removeListeners();
@@ -181,7 +189,7 @@ public class AlbumActivity extends MvpSwipeBackActivity implements AlbumView, On
         intent.putParcelableArrayListExtra(
                 PicturesPagerActivity.EXTRA_PICTURE_LIST,
                 (ArrayList<Picture>) albumAdapter.getPictureList());
-        startActivity(intent);
+        startActivityForResult(intent, PicturesPagerActivity.REQUEST_CODE);
     }
 
     //------------------------------------------------------------------------------------------------------------------
